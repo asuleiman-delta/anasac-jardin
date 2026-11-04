@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@1&amp;family=Figtree:wght@700&amp;family=Kalam:wght@400;700&amp;family=Schibsted+Grotesk:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="tokens.css">
+<style>
+:root{--font-ui:'Schibsted Grotesk',system-ui,sans-serif;--text-primary:var(--brand-950);--text-secondary:#89867F;--text-muted:#89867F}
+html,body{background:#FBF9F4}
+html{scroll-behavior:smooth}
+@keyframes chatdot{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}
+@keyframes ldbar{0%{transform:translateX(-100%)}100%{transform:translateX(250%)}}
+body{margin:0;background:var(--surface-base,#FBF9F4);-webkit-font-smoothing:antialiased}
+a{color:var(--brand-700);text-decoration:none}
+a:hover{color:var(--brand-800)}
+::selection{background:var(--brand-200)}
+:focus-visible{outline:2px solid var(--brand-700);outline-offset:3px}
+[data-pin]:hover,[data-pin]:focus-visible{z-index:5!important}
+[data-pin]:hover [data-pin-card],[data-pin]:focus-visible [data-pin-card]{opacity:1!important;transform:none!important}
+a[data-hub]:hover [data-hub-blob]{border-radius:10% 10% 10% 10% / 10% 10% 10% 10% !important}
+</style>
+</helmet>
+<div ref="{{ rootRef }}" data-brand="{{ brand }}" style="font-family:var(--font-ui);color:var(--text-primary);background:var(--surface-base);position:relative;overflow-x:clip">
+<sc-if value="{{ loaderOn }}" hint-placeholder-val="{{ true }}"><div aria-hidden="true" style="position:fixed;inset:0;z-index:200;background:#FBF9F4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;transition:opacity .6s ease,visibility .6s;opacity:{{ loaderOpacity }}">
+  <div style="display:flex;align-items:center;gap:14px">
+    <img src="assets/logo-anasac.png" alt="" style="height:40px;width:auto;display:block">
+    <span style="width:1px;height:30px;background:#E0D5C0"></span>
+    <span style="font-family:'Figtree',system-ui,sans-serif;font-size:26px;font-weight:500;letter-spacing:-.02em;color:#2F4A1E;line-height:1">Jardín</span>
+  </div>
+  <div style="width:140px;height:3px;border-radius:999px;background:#EDE5D5;overflow:hidden">{{ loaderBar }}</div>
+</div></sc-if>
+
+<!-- 1 Utility bar -->
+<div data-screen-label="Utility bar" style="background:var(--brand-900)">
+  <div style="max-width:none;margin:0 auto;padding:0 clamp(20px,4vw,40px);box-sizing:border-box;height:32px;display:flex;align-items:center;justify-content:{{ utilJustify }};gap:clamp(14px,2vw,24px);font-size:12px;line-height:16px;letter-spacing:.02em">
+    <a href="#" style="color:rgba(255,255,255,.6);display:flex;align-items:center;gap:4px" style-hover="color:#fff">Anasac Hogar <span aria-hidden="true">↗</span></a>
+    <a href="#" style="color:rgba(255,255,255,.6);display:flex;align-items:center;gap:4px" style-hover="color:#fff">Anasac Control <span aria-hidden="true">↗</span></a>
+    <a href="#" style="color:rgba(255,255,255,.6);display:flex;align-items:center;gap:4px" style-hover="color:#fff">Anasac Pet <span aria-hidden="true">↗</span></a>
+  </div>
+</div>
+
+<!-- 2 Header -->
+<header data-screen-label="Header" onMouseLeave="{{ closeMega }}" style="position:sticky;top:0;z-index:40;transition:transform .35s cubic-bezier(.3,.7,.2,1);transform:{{ headerY }};background:rgba(251,249,244,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border-subtle)">
+  <div style="max-width:none;margin:0 auto;padding:0 clamp(20px,4vw,40px);box-sizing:border-box;height:clamp(56px,5vw,68px);display:flex;align-items:center;gap:clamp(8px,2vw,24px)">
+    <sc-if value="{{ showBurger }}" hint-placeholder-val="{{ false }}"><button aria-label="Abrir menú" aria-expanded="{{ menuOpen }}" onClick="{{ toggleMenu }}" style="width:44px;height:44px;flex:none;margin-left:-8px;border:0;border-radius:50%;background:{{ burgerBg }};color:var(--text-primary);display:grid;place-items:center;cursor:pointer" style-hover="background:var(--surface-sand)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="{{ burgerPath }}"></path></svg></button></sc-if>
+    <a href="#" style="display:flex;align-items:center;gap:clamp(8px,1.2vw,14px);flex:none;margin-right:auto" aria-label="Anasac Jardín, inicio">
+      <img src="assets/logo-anasac.png" alt="Anasac" style="height:clamp(22px,2.2vw,30px);width:auto;display:block">
+      <span style="width:1px;height:clamp(18px,1.8vw,24px);background:var(--border-default)"></span>
+      <span style="font-family:'Figtree',system-ui,sans-serif;font-size:clamp(17px,1.6vw,21px);font-weight:500;letter-spacing:-.02em;color:var(--brand-800);line-height:1">Jardín</span>
+    </a>
+    <sc-if value="{{ showNav }}" hint-placeholder-val="{{ true }}"><nav style="flex:1;display:flex;justify-content:center;min-width:0">
+      <div style="display:flex;align-items:center;gap:2px;padding:4px;border-radius:999px;background:transparent;font-size:14px;line-height:20px;letter-spacing:0;font-weight:400">
+        <a href="#" onMouseEnter="{{ closeMega }}" style="padding:7px 12px;border-radius:999px;white-space:nowrap;background:var(--surface-warm);color:var(--text-primary)" style-hover="color:var(--text-primary)">Inicio</a>
+        <a href="#problemas" onMouseEnter="{{ closeMega }}" style="padding:7px 12px;border-radius:999px;white-space:nowrap;border:0;background:transparent;font:inherit;cursor:pointer;color:var(--text-secondary)" style-hover="background:var(--surface-warm);color:var(--text-primary)">Problemas y soluciones</a>
+        <button aria-expanded="{{ megaJardin }}" onMouseEnter="{{ openJardin }}" onClick="{{ toggleJardin }}" style="padding:7px 12px;border-radius:999px;white-space:nowrap;border:0;background:transparent;font:inherit;cursor:pointer;color:var(--text-secondary);display:flex;align-items:center;gap:5px;background:{{ jardinBg }}" style-hover="background:var(--surface-warm);color:var(--text-primary)">Tu jardín <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .2s;transform:{{ jardinRot }}"><path d="M6 9l6 6 6-6"></path></svg></button>
+        <button aria-expanded="{{ megaProductos }}" onMouseEnter="{{ openProductos }}" onClick="{{ toggleProductos }}" style="padding:7px 12px;border-radius:999px;white-space:nowrap;border:0;background:transparent;font:inherit;cursor:pointer;color:var(--text-secondary);display:flex;align-items:center;gap:5px;background:{{ productosBg }}" style-hover="background:var(--surface-warm);color:var(--text-primary)">Productos <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .2s;transform:{{ productosRot }}"><path d="M6 9l6 6 6-6"></path></svg></button>
+        <a href="#inspirate" onMouseEnter="{{ closeMega }}" style="padding:7px 12px;border-radius:999px;white-space:nowrap;border:0;background:transparent;font:inherit;cursor:pointer;color:var(--text-secondary)" style-hover="background:var(--surface-warm);color:var(--text-primary)">Inspírate</a>
+        <a href="#donde-comprar" onMouseEnter="{{ closeMega }}" style="padding:7px 12px;border-radius:999px;white-space:nowrap;border:0;background:transparent;font:inherit;cursor:pointer;color:var(--text-secondary)" style-hover="background:var(--surface-warm);color:var(--text-primary)">Dónde comprar</a>
+      </div>
+    </nav></sc-if>
+    <div onMouseEnter="{{ closeMega }}" style="display:flex;align-items:center;gap:6px;flex:none">
+      <sc-if value="{{ showProBtn }}" hint-placeholder-val="{{ true }}"><a href="#" style="height:38px;padding:0 14px 0 12px;border-radius:999px;border:1px solid var(--blue-600);background:var(--blue-50);color:var(--blue-700);display:flex;align-items:center;gap:8px;font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;box-sizing:border-box;white-space:nowrap;transition:background .15s,color .15s" style-hover="background:var(--blue-700);border-color:var(--blue-700);color:#fff" style-active="transform:scale(.97)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M3 13h18"></path></svg>Profesional</a></sc-if>
+      <button aria-label="Buscar" aria-expanded="{{ searchOpen }}" onClick="{{ toggleSearch }}" style="width:38px;height:38px;border-radius:999px;border:0;background:var(--brand-800);color:#fff;display:grid;place-items:center;cursor:pointer;transition:background .15s" style-hover="background:var(--brand-900)" style-active="transform:scale(.95)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path><path d="M20 20l-4-4"></path></svg></button>
+    </div>
+  </div>
+  <sc-if value="{{ megaJardin }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:0;right:0;top:100%;padding:8px clamp(20px,4vw,40px) 0;box-sizing:border-box"><div style="max-width:1280px;margin:0 auto;background:var(--surface-base);border-radius:24px;box-shadow:0 0 0 1px var(--border-subtle),0 24px 60px -20px rgba(38,35,30,.28);padding:24px;display:grid;grid-template-columns:minmax(0,3fr) minmax(280px,1.1fr);gap:24px"><div style="display:flex;flex-direction:column;gap:14px;padding:4px 0 0 8px"><div style="font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:var(--brand-700)">Tu jardín por espacio</div><div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin-left:-8px"><a href="#huerto" onClick="{{ closeMega }}" style="display:flex;flex-direction:column;gap:10px;padding:8px 8px 12px;border-radius:18px;color:var(--text-primary);transition:background .15s" style-hover="background:var(--surface-warm);color:var(--text-primary)"><div style="aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:var(--brand-50)"><img loading="lazy" decoding="async" src="assets/hub-huerto.webp" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></div><div style="display:flex;flex-direction:column;gap:3px;padding:0 4px"><span style="font-family:var(--font-ui);font-size:clamp(19px,1.6vw,22px);line-height:1.18;letter-spacing:-.02em">Huerto casero</span><span style="font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-secondary)">Cosecha en tu propio hogar</span></div></a><a href="#huerto" onClick="{{ closeMega }}" style="display:flex;flex-direction:column;gap:10px;padding:8px 8px 12px;border-radius:18px;color:var(--text-primary);transition:background .15s" style-hover="background:var(--surface-warm);color:var(--text-primary)"><div style="aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:var(--brand-50)"><img loading="lazy" decoding="async" src="assets/hub-pasto.webp" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></div><div style="display:flex;flex-direction:column;gap:3px;padding:0 4px"><span style="font-family:var(--font-ui);font-size:clamp(19px,1.6vw,22px);line-height:1.18;letter-spacing:-.02em">Césped y pasto</span><span style="font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-secondary)">Un pasto verde todo el año</span></div></a><a href="#huerto" onClick="{{ closeMega }}" style="display:flex;flex-direction:column;gap:10px;padding:8px 8px 12px;border-radius:18px;color:var(--text-primary);transition:background .15s" style-hover="background:var(--surface-warm);color:var(--text-primary)"><div style="aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:var(--brand-50)"><img loading="lazy" decoding="async" src="assets/hub-interior.webp" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></div><div style="display:flex;flex-direction:column;gap:3px;padding:0 4px"><span style="font-family:var(--font-ui);font-size:clamp(19px,1.6vw,22px);line-height:1.18;letter-spacing:-.02em">Plantas de interior</span><span style="font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-secondary)">Vida verde dentro de casa</span></div></a><a href="#huerto" onClick="{{ closeMega }}" style="display:flex;flex-direction:column;gap:10px;padding:8px 8px 12px;border-radius:18px;color:var(--text-primary);transition:background .15s" style-hover="background:var(--surface-warm);color:var(--text-primary)"><div style="aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:var(--brand-50)"><img loading="lazy" decoding="async" src="assets/hub-flores.webp" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></div><div style="display:flex;flex-direction:column;gap:3px;padding:0 4px"><span style="font-family:var(--font-ui);font-size:clamp(19px,1.6vw,22px);line-height:1.18;letter-spacing:-.02em">Flores y ornamentales</span><span style="font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-secondary)">Cuida y haz florecer tu jardín</span></div></a></div></div><div style="display:flex;flex-direction:column;gap:10px;padding:20px;border-radius:20px;background:var(--surface-warm)"><div style="font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:var(--brand-700)">Accesos rápidos</div><div style="height:4px"></div><a href="#estacional" onClick="{{ closeMega }}" style="display:flex;align-items:center;gap:14px;padding:14px;border-radius:14px;background:#fff;color:var(--text-primary);transition:transform .15s" style-hover="transform:translateX(3px);color:var(--text-primary)"><span style="width:40px;height:40px;flex:none;border-radius:12px;background:var(--brand-100);color:var(--brand-800);display:grid;place-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"></path><path d="M16 3v4M8 3v4M5 11h14"></path></svg></span><span style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400">Calendario del jardín</span><span style="font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-secondary)">Qué hacer cada mes</span></span><span style="color:var(--brand-700);display:flex"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a><a href="#guias" onClick="{{ closeMega }}" style="display:flex;align-items:center;gap:14px;padding:14px;border-radius:14px;background:#fff;color:var(--text-primary);transition:transform .15s" style-hover="transform:translateX(3px);color:var(--text-primary)"><span style="width:40px;height:40px;flex:none;border-radius:12px;background:var(--brand-100);color:var(--brand-800);display:grid;place-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H4z"></path><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H14a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h6z"></path></svg></span><span style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400">Ver todas las guías</span><span style="font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-secondary)">Micro-guías de 5 minutos</span></span><span style="color:var(--brand-700);display:flex"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a></div></div></div></sc-if>
+  <sc-if value="{{ megaProductos }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:0;right:0;top:100%;padding:8px clamp(20px,4vw,40px) 0;box-sizing:border-box"><div style="max-width:1280px;margin:0 auto;background:var(--surface-base);border-radius:24px;box-shadow:0 0 0 1px var(--border-subtle),0 24px 60px -20px rgba(38,35,30,.28);padding:24px;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);gap:24px"><div style="display:flex;flex-direction:column;gap:14px;padding:4px 0 0 4px"><div style="font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:var(--brand-700)">Categorías</div><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px"><a href="#" onClick="{{ closeMega }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-radius:14px;background:var(--surface-warm);color:var(--text-primary);font-family:var(--font-ui);font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;transition:background .15s" style-hover="background:var(--surface-sand);color:var(--text-primary)">Fertilizantes y nutrición<span style="color:var(--brand-700);display:flex"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a><a href="#" onClick="{{ closeMega }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-radius:14px;background:var(--surface-warm);color:var(--text-primary);font-family:var(--font-ui);font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;transition:background .15s" style-hover="background:var(--surface-sand);color:var(--text-primary)">Control de plagas<span style="color:var(--brand-700);display:flex"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a><a href="#" onClick="{{ closeMega }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-radius:14px;background:var(--surface-warm);color:var(--text-primary);font-family:var(--font-ui);font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;transition:background .15s" style-hover="background:var(--surface-sand);color:var(--text-primary)">Control de hongos<span style="color:var(--brand-700);display:flex"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a><a href="#" onClick="{{ closeMega }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-radius:14px;background:var(--surface-warm);color:var(--text-primary);font-family:var(--font-ui);font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;transition:background .15s" style-hover="background:var(--surface-sand);color:var(--text-primary)">Control de malezas<span style="color:var(--brand-700);display:flex"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a><a href="#" onClick="{{ closeMega }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-radius:14px;background:var(--surface-warm);color:var(--text-primary);font-family:var(--font-ui);font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;transition:background .15s" style-hover="background:var(--surface-sand);color:var(--text-primary)">Semillas de pasto<span style="color:var(--brand-700);display:flex"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a><a href="#" onClick="{{ closeMega }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-radius:14px;background:var(--surface-warm);color:var(--text-primary);font-family:var(--font-ui);font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;transition:background .15s" style-hover="background:var(--surface-sand);color:var(--text-primary)">Sustratos y tierras<span style="color:var(--brand-700);display:flex"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a></div></div><div style="display:flex;flex-direction:column;gap:16px;padding:20px;border-radius:20px;border:1px solid var(--border-subtle);background:#fff"><div style="font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:var(--brand-700)">Encuentra por</div><div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-secondary)">Uso</span><div style="display:flex;flex-wrap:wrap;gap:6px"><a href="#" onClick="{{ closeMega }}" style="padding:7px 12px;border-radius:999px;border:1px solid var(--border-default);font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-primary);transition:background .15s,border-color .15s" style-hover="background:var(--brand-50);border-color:var(--brand-500);color:var(--brand-800)">Prevención</a><a href="#" onClick="{{ closeMega }}" style="padding:7px 12px;border-radius:999px;border:1px solid var(--border-default);font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-primary);transition:background .15s,border-color .15s" style-hover="background:var(--brand-50);border-color:var(--brand-500);color:var(--brand-800)">Tratamiento</a><a href="#" onClick="{{ closeMega }}" style="padding:7px 12px;border-radius:999px;border:1px solid var(--border-default);font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-primary);transition:background .15s,border-color .15s" style-hover="background:var(--brand-50);border-color:var(--brand-500);color:var(--brand-800)">Nutrición</a></div></div><div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-secondary)">Espacio</span><div style="display:flex;flex-wrap:wrap;gap:6px"><a href="#" onClick="{{ closeMega }}" style="padding:7px 12px;border-radius:999px;border:1px solid var(--border-default);font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-primary);transition:background .15s,border-color .15s" style-hover="background:var(--brand-50);border-color:var(--brand-500);color:var(--brand-800)">Huerto</a><a href="#" onClick="{{ closeMega }}" style="padding:7px 12px;border-radius:999px;border:1px solid var(--border-default);font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-primary);transition:background .15s,border-color .15s" style-hover="background:var(--brand-50);border-color:var(--brand-500);color:var(--brand-800)">Césped</a><a href="#" onClick="{{ closeMega }}" style="padding:7px 12px;border-radius:999px;border:1px solid var(--border-default);font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-primary);transition:background .15s,border-color .15s" style-hover="background:var(--brand-50);border-color:var(--brand-500);color:var(--brand-800)">Interior</a><a href="#" onClick="{{ closeMega }}" style="padding:7px 12px;border-radius:999px;border:1px solid var(--border-default);font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-primary);transition:background .15s,border-color .15s" style-hover="background:var(--brand-50);border-color:var(--brand-500);color:var(--brand-800)">Flores</a></div></div><div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-secondary)">Síntoma</span><div style="display:flex;flex-wrap:wrap;gap:6px"><a href="#" onClick="{{ closeMega }}" style="padding:7px 12px;border-radius:999px;border:1px solid var(--border-default);font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-primary);transition:background .15s,border-color .15s" style-hover="background:var(--brand-50);border-color:var(--brand-500);color:var(--brand-800)">Hojas amarillas</a><a href="#" onClick="{{ closeMega }}" style="padding:7px 12px;border-radius:999px;border:1px solid var(--border-default);font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-primary);transition:background .15s,border-color .15s" style-hover="background:var(--brand-50);border-color:var(--brand-500);color:var(--brand-800)">Pulgones</a><a href="#" onClick="{{ closeMega }}" style="padding:7px 12px;border-radius:999px;border:1px solid var(--border-default);font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-primary);transition:background .15s,border-color .15s" style-hover="background:var(--brand-50);border-color:var(--brand-500);color:var(--brand-800)">Hongos</a><a href="#" onClick="{{ closeMega }}" style="padding:7px 12px;border-radius:999px;border:1px solid var(--border-default);font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-primary);transition:background .15s,border-color .15s" style-hover="background:var(--brand-50);border-color:var(--brand-500);color:var(--brand-800)">Pasto amarillo</a></div></div><div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-secondary)">Temporada</span><div style="display:flex;flex-wrap:wrap;gap:6px"><a href="#" onClick="{{ closeMega }}" style="padding:7px 12px;border-radius:999px;border:1px solid var(--border-default);font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-primary);transition:background .15s,border-color .15s" style-hover="background:var(--brand-50);border-color:var(--brand-500);color:var(--brand-800)">Primavera</a><a href="#" onClick="{{ closeMega }}" style="padding:7px 12px;border-radius:999px;border:1px solid var(--border-default);font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-primary);transition:background .15s,border-color .15s" style-hover="background:var(--brand-50);border-color:var(--brand-500);color:var(--brand-800)">Verano</a><a href="#" onClick="{{ closeMega }}" style="padding:7px 12px;border-radius:999px;border:1px solid var(--border-default);font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-primary);transition:background .15s,border-color .15s" style-hover="background:var(--brand-50);border-color:var(--brand-500);color:var(--brand-800)">Otoño</a><a href="#" onClick="{{ closeMega }}" style="padding:7px 12px;border-radius:999px;border:1px solid var(--border-default);font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-primary);transition:background .15s,border-color .15s" style-hover="background:var(--brand-50);border-color:var(--brand-500);color:var(--brand-800)">Invierno</a></div></div><a href="#" onClick="{{ closeMega }}" style="margin-top:4px;height:44px;border-radius:999px;background:var(--brand-800);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400" style-hover="background:var(--brand-900);color:#fff">Ver catálogo completo <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a></div></div></div></sc-if>
+  <sc-if value="{{ searchOpen }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:0;right:0;top:100%;padding:8px clamp(20px,4vw,40px) 0;box-sizing:border-box"><div style="max-width:880px;margin:0 auto;background:var(--surface-base);border-radius:24px;box-shadow:0 0 0 1px var(--border-subtle),0 24px 60px -20px rgba(38,35,30,.28);padding:clamp(16px,2.4vw,24px);display:flex;flex-direction:column;gap:18px">
+    <form onSubmit="{{ noSubmit }}" style="display:flex;align-items:center;gap:10px;height:44px;padding:0 8px 0 20px;border-radius:999px;background:#fff;box-shadow:0 0 0 1.5px var(--brand-700)">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--brand-700)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M4 11a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path><path d="M20 20l-4-4"></path></svg>
+      <input ref="{{ searchRef }}" type="search" value="{{ searchQ }}" onChange="{{ onSearchInput }}" placeholder="Busca un problema, una guía o un producto" aria-label="Buscar" style="flex:1;min-width:0;height:100%;border:0;outline:none;background:transparent;font:inherit;font-size:16px;line-height:24px;letter-spacing:-.01em;color:var(--text-primary)">
+      <button type="button" aria-label="Cerrar búsqueda" onClick="{{ closeSearch }}" style="width:44px;height:44px;flex:none;border-radius:999px;border:0;background:var(--surface-warm);color:var(--text-primary);display:grid;place-items:center;cursor:pointer" style-hover="background:var(--surface-sand)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+    </form>
+    <div style="display:flex;flex-direction:column;gap:10px;padding:0 4px">
+      <span style="font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:var(--brand-700)">Búsquedas frecuentes</span>
+      <div style="display:flex;flex-wrap:wrap;gap:8px"><button type="button" onClick="{{ pickSearch }}" data-q="Hojas amarillas" style="padding:9px 14px;border-radius:999px;border:1px solid var(--border-default);background:transparent;font:inherit;font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-primary);cursor:pointer;transition:background .15s,border-color .15s" style-hover="background:var(--brand-50);border-color:var(--brand-500);color:var(--brand-800)">Hojas amarillas</button><button type="button" onClick="{{ pickSearch }}" data-q="Pulgones" style="padding:9px 14px;border-radius:999px;border:1px solid var(--border-default);background:transparent;font:inherit;font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-primary);cursor:pointer;transition:background .15s,border-color .15s" style-hover="background:var(--brand-50);border-color:var(--brand-500);color:var(--brand-800)">Pulgones</button><button type="button" onClick="{{ pickSearch }}" data-q="Fertilizante para pasto" style="padding:9px 14px;border-radius:999px;border:1px solid var(--border-default);background:transparent;font:inherit;font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-primary);cursor:pointer;transition:background .15s,border-color .15s" style-hover="background:var(--brand-50);border-color:var(--brand-500);color:var(--brand-800)">Fertilizante para pasto</button><button type="button" onClick="{{ pickSearch }}" data-q="Hongos en rosas" style="padding:9px 14px;border-radius:999px;border:1px solid var(--border-default);background:transparent;font:inherit;font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-primary);cursor:pointer;transition:background .15s,border-color .15s" style-hover="background:var(--brand-50);border-color:var(--brand-500);color:var(--brand-800)">Hongos en rosas</button><button type="button" onClick="{{ pickSearch }}" data-q="Qué plantar en {{ mesLower }}" style="padding:9px 14px;border-radius:999px;border:1px solid var(--border-default);background:transparent;font:inherit;font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--text-primary);cursor:pointer;transition:background .15s,border-color .15s" style-hover="background:var(--brand-50);border-color:var(--brand-500);color:var(--brand-800)">Qué plantar en {{ mesLower }}</button></div>
+    </div>
+  </div></div></sc-if>
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <nav aria-label="Menú principal" style="border-top:1px solid var(--border-subtle);background:var(--surface-base);max-height:calc(100vh - 100px);overflow-y:auto">
+      <div style="max-width:1360px;margin:0 auto;padding:8px clamp(20px,4vw,40px) 24px;box-sizing:border-box;display:grid;grid-template-columns:{{ menuCols }};gap:0 40px">
+        <div style="display:flex;flex-direction:column">
+          <a href="#" style="min-height:52px;display:flex;align-items:center;font-family:var(--font-ui);font-size:clamp(19px,1.6vw,22px);line-height:1.18;letter-spacing:-.02em;color:var(--brand-800);border-bottom:1px solid var(--border-subtle)">Inicio</a>
+          <a href="#" style="min-height:52px;display:flex;align-items:center;font-family:var(--font-ui);font-size:clamp(19px,1.6vw,22px);line-height:1.18;letter-spacing:-.02em;color:var(--text-primary);border-bottom:1px solid var(--border-subtle)">Problemas y soluciones</a>
+          <a href="#" style="min-height:52px;display:flex;align-items:center;justify-content:space-between;font-family:var(--font-ui);font-size:clamp(19px,1.6vw,22px);line-height:1.18;letter-spacing:-.02em;color:var(--text-primary);border-bottom:1px solid var(--border-subtle)">Tu jardín <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></a>
+          <a href="#" style="min-height:52px;display:flex;align-items:center;justify-content:space-between;font-family:var(--font-ui);font-size:clamp(19px,1.6vw,22px);line-height:1.18;letter-spacing:-.02em;color:var(--text-primary);border-bottom:1px solid var(--border-subtle)">Productos <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></a>
+          <a href="#" style="min-height:52px;display:flex;align-items:center;font-family:var(--font-ui);font-size:clamp(19px,1.6vw,22px);line-height:1.18;letter-spacing:-.02em;color:var(--text-primary);border-bottom:1px solid var(--border-subtle)">Inspírate</a>
+          <a href="#" style="min-height:52px;display:flex;align-items:center;font-family:var(--font-ui);font-size:clamp(19px,1.6vw,22px);line-height:1.18;letter-spacing:-.02em;color:var(--text-primary);border-bottom:1px solid var(--border-subtle)">Dónde comprar</a>
+          <a href="#" style="margin-top:20px;height:44px;border-radius:999px;border:1.5px solid var(--text-primary);color:var(--text-primary);display:flex;align-items:center;justify-content:center;font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;box-sizing:border-box" style-hover="background:var(--text-primary);color:var(--text-inverse)">Profesional</a>
+        </div>
+        <div style="display:flex;flex-direction:column;padding-top:20px">
+          <div style="font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px">Marcas Anasac ↗</div>
+          <div style="min-height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;margin:0 -12px;border-radius:12px;background:var(--brand-50);font-weight:400;color:var(--brand-800)">Anasac Jardín <span style="font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:var(--brand-700);color:#fff">Estás aquí</span></div>
+          <a href="#" style="min-height:44px;display:flex;align-items:center;justify-content:space-between;color:var(--text-primary)">Anasac Hogar <span style="color:var(--text-muted)">↗</span></a>
+          <a href="#" style="min-height:44px;display:flex;align-items:center;justify-content:space-between;color:var(--text-primary)">Anasac Control <span style="color:var(--text-muted)">↗</span></a>
+          <a href="#" style="min-height:44px;display:flex;align-items:center;justify-content:space-between;color:var(--text-primary)">Anasac Pet <span style="color:var(--text-muted)">↗</span></a>
+          <a href="#" style="min-height:44px;display:flex;align-items:center;justify-content:space-between;color:var(--text-primary)">Cyperkill <span style="color:var(--text-muted)">↗</span></a>
+          <a href="#" style="min-height:44px;display:flex;align-items:center;justify-content:space-between;color:var(--text-primary)">Rastop <span style="color:var(--text-muted)">↗</span></a>
+          <a href="#" style="min-height:44px;display:flex;align-items:center;justify-content:space-between;color:var(--text-primary)">Zecto <span style="color:var(--text-muted)">↗</span></a>
+        </div>
+      </div>
+    </nav>
+  </sc-if>
+</header>
+
+<!-- 3 Hero -->
+<section data-screen-label="Hero" style="background:var(--surface-warm);height:{{ heroSecH }};min-height:{{ heroSecMin }};box-sizing:border-box">
+  <div style="max-width:none;height:100%;margin:0 auto;padding:clamp(24px,3vw,40px) clamp(20px,4vw,40px) clamp(32px,4vw,48px);box-sizing:border-box;display:grid;grid-template-columns:{{ heroCols }};grid-template-rows:minmax(0,1fr);gap:clamp(32px,4vw,56px);align-items:center">
+    <div style="display:flex;flex-direction:column;gap:28px;padding-bottom:16px">
+      <div style="display:flex;align-items:center;gap:10px;font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:var(--brand-700)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M7 20h10"></path><path d="M10 20c5.5-2.5.8-6.4 3-10"></path><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"></path><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"></path></svg><span>Tu jardín, tus reglas</span></div>
+      <h1 style="margin:0;font-family:var(--font-ui);font-weight:400;font-size:clamp(44px,5vw,72px);line-height:1;letter-spacing:-.06em;color:var(--text-primary);text-wrap:balance">Todo lo que tu jardín necesita para <span style="position:relative;white-space:nowrap;font-family:var(--font-display);font-style:italic;font-weight:400;letter-spacing:-.02em;color:var(--brand-800)">florecer</span></h1>
+      <p style="margin:0;font-size:clamp(18px,1.7vw,24px);line-height:1.42;letter-spacing:-.03em;max-width:30em;text-wrap:pretty;color:var(--text-secondary)">Consejos, soluciones y productos pensados para cada rincón de tu hogar. Sin complicaciones, sin lenguaje técnico.</p>
+      <div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap;margin-top:4px">
+        <a href="#" style="display:inline-flex;align-items:center;gap:10px;height:44px;padding:0 22px;border-radius:999px;background:var(--brand-700);color:#fff;font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;transition:background .15s,transform .15s" style-hover="background:var(--brand-800);color:#fff" style-active="background:var(--brand-900);transform:scale(.98)">Ir a Problemas y soluciones <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        <a href="#" style="font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;color:var(--text-primary);text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:6px;text-decoration-color:var(--brand-400)" style-hover="color:var(--brand-800);text-decoration-color:var(--brand-800)">Explora Tu jardín</a>
+      </div>
+    </div>
+    <div role="region" aria-roledescription="carrusel" aria-label="Destacados de Anasac Jardín" onMouseEnter="{{ heroHoverOn }}" onMouseLeave="{{ heroHoverOff }}" onFocus="{{ heroFocusIn }}" onBlur="{{ heroFocusOut }}" style="position:relative;height:{{ heroH }}">
+      <div style="position:absolute;inset:0;border-radius:{{ heroRadius }};overflow:hidden;background:var(--surface-sand);color:var(--text-secondary)">
+        <img data-hero-pano="" fetchpriority="high" decoding="async" src="assets/hero-pano3.webp" alt="Jardín con pasto y flores" style="position:absolute;top:0;left:0;height:100%;width:auto;min-width:100%;max-width:none;display:block;will-change:transform"><div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;opacity:.3;-webkit-mask-image:radial-gradient(ellipse 34% 40% at 50% 50%,transparent 55%,#000 100%);mask-image:radial-gradient(ellipse 34% 40% at 50% 50%,transparent 55%,#000 100%)"><img data-hero-pano-blur="" src="assets/hero-pano3-blur.webp" alt="" decoding="async" style="position:absolute;top:0;left:0;height:100%;width:auto;min-width:100%;max-width:none;display:block;will-change:transform"></div><div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;-webkit-mask-image:linear-gradient(to right,#000 0%,transparent 30%,transparent 70%,#000 100%);mask-image:linear-gradient(to right,#000 0%,transparent 30%,transparent 70%,#000 100%)"><img data-hero-pano-blur="" src="assets/hero-pano3-blur.webp" alt="" decoding="async" style="position:absolute;top:0;left:0;height:100%;width:auto;min-width:100%;max-width:none;display:block;will-change:transform"></div>
+        <div style="position:absolute;left:0;right:0;top:56%;transform:translateY(-50%);display:flex;flex-direction:column;gap:14px">
+          <div data-hero-nav="" style="order:2;display:flex;justify-content:center;gap:8px"><button aria-label="Anterior" onClick="{{ heroPrev }}" style="width:44px;height:44px;border-radius:50%;border:none;background:rgba(251,249,244,.96);color:var(--text-primary);display:grid;place-items:center;cursor:pointer;box-shadow:var(--shadow-sm);transition:background .15s" style-hover="background:#fff" style-active="transform:scale(.95)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg></button><button aria-label="{{ heroPlayLabel }}" onClick="{{ heroTogglePlay }}" style="width:44px;height:44px;border-radius:50%;border:none;background:rgba(251,249,244,.96);color:var(--text-primary);display:grid;place-items:center;cursor:pointer;box-shadow:var(--shadow-sm);transition:background .15s" style-hover="background:#fff" style-active="transform:scale(.95)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="{{ heroPlayIcon }}"></path></svg></button><button aria-label="Siguiente" onClick="{{ heroNext }}" style="width:44px;height:44px;border-radius:50%;border:none;background:rgba(251,249,244,.96);color:var(--text-primary);display:grid;place-items:center;cursor:pointer;box-shadow:var(--shadow-sm);transition:background .15s" style-hover="background:#fff" style-active="transform:scale(.95)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg></button></div>
+          <div ref="{{ heroTrackRef }}" onScroll="{{ heroOnScroll }}" aria-live="{{ heroLive }}" style="order:1;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 16%,#000 84%,transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 16%,#000 84%,transparent 100%);display:flex;gap:40px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;padding:150px calc(50% - {{ heroCardHalf }}) 10px;margin-top:-144px">
+          <div style="flex:0 0 {{ heroCardW }};scroll-snap-align:center;position:relative;z-index:2;display:flex;will-change:transform,filter"><a href="#problemas" style="flex:1 1 auto;scroll-snap-align:center;position:relative;overflow:hidden;isolation:isolate;display:flex;flex-direction:column;gap:14px;padding:10px 10px 18px;border-radius:var(--radius-lg);background:transparent;color:var(--text-primary);box-shadow:var(--shadow-md);box-sizing:border-box;transition:transform .24s var(--ease-out)" style-hover="transform:translateY(-3px);color:var(--text-primary)">
+            <div data-hole="" aria-hidden="true" style="aspect-ratio:4/3;border-radius:var(--radius-md);box-shadow:0 0 0 600px var(--surface-card),inset 0 0 0 1px rgba(255,255,255,.35);position:relative;z-index:-1;overflow:hidden"><img src="assets/hero-pano3-blur.webp" alt="" decoding="async" style="position:absolute;left:0;top:0;max-width:none;opacity:0;pointer-events:none;display:block;will-change:transform,opacity"></div>
+            <div style="display:flex;flex-direction:column;gap:8px;min-width:0;padding:0 8px">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:var(--brand-700)">¿Qué le pasa a tu planta?<span style="flex:none;display:flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></div>
+              <div style="font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-secondary);text-wrap:pretty">Hojas amarillas, pulgones, hongos… encuentra la solución en minutos.</div>
+            </div>
+          </a><img src="assets/planta.webp" alt="" aria-hidden="true" style="position:absolute;left:50%;top:0;width:148%;height:auto;max-width:none;transform:translate(-50%,-24%);pointer-events:none;display:block;filter:drop-shadow(0 8px 12px rgba(0,0,0,.28))"></div>
+          <div style="flex:0 0 {{ heroCardW }};scroll-snap-align:center;position:relative;z-index:2;display:flex;will-change:transform,filter"><a href="#estacional" style="flex:1 1 auto;scroll-snap-align:center;position:relative;overflow:hidden;isolation:isolate;display:flex;flex-direction:column;gap:14px;padding:10px 10px 18px;border-radius:var(--radius-lg);background:transparent;color:var(--text-primary);box-shadow:var(--shadow-md);box-sizing:border-box;transition:transform .24s var(--ease-out)" style-hover="transform:translateY(-3px);color:var(--text-primary)">
+            <div data-hole="" aria-hidden="true" style="aspect-ratio:4/3;border-radius:var(--radius-md);box-shadow:0 0 0 600px var(--surface-card),inset 0 0 0 1px rgba(255,255,255,.35);position:relative;z-index:-1;overflow:hidden"><img src="assets/hero-pano3-blur.webp" alt="" decoding="async" style="position:absolute;left:0;top:0;max-width:none;opacity:0;pointer-events:none;display:block;will-change:transform,opacity"></div>
+            <div style="display:flex;flex-direction:column;gap:8px;min-width:0;padding:0 8px">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:var(--brand-700)">Este mes en tu jardín<span style="flex:none;display:flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></div>
+              <div style="font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-secondary);text-wrap:pretty">{{ mes }}: riego profundo y siembras de {{ temporadaLower }}.</div>
+            </div>
+          </a><img src="assets/plantas2.webp" alt="" aria-hidden="true" style="position:absolute;left:50%;top:0;width:135%;height:auto;max-width:none;transform:translate(-50%,-16%);pointer-events:none;display:block;filter:drop-shadow(0 8px 12px rgba(0,0,0,.28))"></div>
+          <div style="flex:0 0 {{ heroCardW }};scroll-snap-align:center;position:relative;z-index:2;display:flex;will-change:transform,filter"><img src="assets/planta3-tierra.webp" alt="" aria-hidden="true" style="position:absolute;z-index:0;left:56%;top:0;width:155%;height:auto;max-width:none;transform:translate(-50%,-22%);pointer-events:none;display:block;clip-path:inset(13% 1% 0 0);filter:drop-shadow(0 8px 12px rgba(0,0,0,.28))"><a href="#guias" style="z-index:1;flex:1 1 auto;scroll-snap-align:center;position:relative;overflow:hidden;isolation:isolate;display:flex;flex-direction:column;gap:14px;padding:10px 10px 18px;border-radius:var(--radius-lg);background:transparent;color:var(--text-primary);box-shadow:var(--shadow-md);box-sizing:border-box;transition:transform .24s var(--ease-out)" style-hover="transform:translateY(-3px);color:var(--text-primary)">
+            <div data-hole="" aria-hidden="true" style="aspect-ratio:4/3;border-radius:var(--radius-md);box-shadow:0 0 0 600px var(--surface-card),inset 0 0 0 1px rgba(255,255,255,.35);position:relative;z-index:-1;overflow:hidden"><img src="assets/hero-pano3-blur.webp" alt="" decoding="async" style="position:absolute;left:0;top:0;max-width:none;opacity:0;pointer-events:none;display:block;will-change:transform,opacity"></div>
+            <div style="display:flex;flex-direction:column;gap:8px;min-width:0;padding:0 8px">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:var(--brand-700)">Guías en 5 minutos<span style="flex:none;display:flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></div>
+              <div style="font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-secondary);text-wrap:pretty">Consejos cortos y prácticos, validados por expertos.</div>
+            </div>
+          </a><img src="assets/planta3-top.webp" alt="" aria-hidden="true" style="position:absolute;z-index:3;left:56%;top:0;width:155%;height:auto;max-width:none;transform:translate(-50%,-22%);pointer-events:none;display:block;filter:drop-shadow(0 8px 12px rgba(0,0,0,.28))"></div>
+          <div style="flex:0 0 {{ heroCardW }};scroll-snap-align:center;position:relative;z-index:2;display:flex;will-change:transform,filter"><a href="#huerto" style="flex:1 1 auto;scroll-snap-align:center;position:relative;overflow:hidden;isolation:isolate;display:flex;flex-direction:column;gap:14px;padding:10px 10px 18px;border-radius:var(--radius-lg);background:transparent;color:var(--text-primary);box-shadow:var(--shadow-md);box-sizing:border-box;transition:transform .24s var(--ease-out)" style-hover="transform:translateY(-3px);color:var(--text-primary)">
+            <div data-hole="" aria-hidden="true" style="aspect-ratio:4/3;border-radius:var(--radius-md);box-shadow:0 0 0 600px var(--surface-card),inset 0 0 0 1px rgba(255,255,255,.35);position:relative;z-index:-1;overflow:hidden"><img src="assets/hero-pano3-blur.webp" alt="" decoding="async" style="position:absolute;left:0;top:0;max-width:none;opacity:0;pointer-events:none;display:block;will-change:transform,opacity"></div>
+            <div style="display:flex;flex-direction:column;gap:8px;min-width:0;padding:0 8px">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:var(--brand-700)">Tu huerto en casa<span style="flex:none;display:flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></div>
+              <div style="font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-secondary);text-wrap:pretty">Cosecha tus propias verduras, aunque tengas poco espacio.</div>
+            </div>
+          </a><img src="assets/planta4.webp" alt="" aria-hidden="true" style="position:absolute;left:50%;top:0;width:136%;height:auto;max-width:none;transform:translate(-50%,-24%);pointer-events:none;display:block;filter:drop-shadow(0 8px 12px rgba(0,0,0,.28))"></div>
+          <div style="flex:0 0 {{ heroCardW }};scroll-snap-align:center;position:relative;z-index:2;display:flex;will-change:transform,filter"><a href="#inspirate" style="flex:1 1 auto;scroll-snap-align:center;position:relative;overflow:hidden;isolation:isolate;display:flex;flex-direction:column;gap:14px;padding:10px 10px 18px;border-radius:var(--radius-lg);background:transparent;color:var(--text-primary);box-shadow:var(--shadow-md);box-sizing:border-box;transition:transform .24s var(--ease-out)" style-hover="transform:translateY(-3px);color:var(--text-primary)">
+            <div data-hole="" aria-hidden="true" style="aspect-ratio:4/3;border-radius:var(--radius-md);box-shadow:0 0 0 600px var(--surface-card),inset 0 0 0 1px rgba(255,255,255,.35);position:relative;z-index:-1;overflow:hidden"><img src="assets/hero-pano3-blur.webp" alt="" decoding="async" style="position:absolute;left:0;top:0;max-width:none;opacity:0;pointer-events:none;display:block;will-change:transform,opacity"></div>
+            <div style="display:flex;flex-direction:column;gap:8px;min-width:0;padding:0 8px">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:var(--brand-700)">Ideas para tu espacio<span style="flex:none;display:flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></div>
+              <div style="font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-secondary);text-wrap:pretty">Balcones, terrazas y rincones verdes para inspirarte.</div>
+            </div>
+          </a><img src="assets/planta5.webp" alt="" aria-hidden="true" style="position:absolute;left:50%;top:0;width:155%;height:auto;max-width:none;transform:translate(-50%,-24%);pointer-events:none;display:block;filter:drop-shadow(0 8px 12px rgba(0,0,0,.28))"></div>
+          </div>
+        </div>
+      </div>
+      <sc-if value="{{ showSticker }}" hint-placeholder-val="{{ false }}">
+        <div aria-hidden="true" style="position:absolute;left:{{ stickerLeft }};bottom:clamp(-20px,4vw,56px);z-index:2;width:clamp(108px,11vw,150px);height:clamp(108px,11vw,150px);border-radius:50%;background:var(--sun-100);display:grid;place-items:center;transform:rotate(-10deg);box-shadow:var(--shadow-md);pointer-events:none">
+          <div style="position:absolute;inset:8px;border-radius:50%;border:1.5px dashed var(--sun-500)"></div>
+          <span style="font-family:var(--font-hand);font-size:clamp(23px,2.2vw,30px);font-weight:600;line-height:.95;color:var(--brand-900);text-align:center">#TeQuiero<br>Verde</span>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</section>
+
+<!-- 4 Banner asistente -->
+<section id="asistente" data-screen-label="Asistente" style="background:var(--surface-base);padding:clamp(40px,6vw,72px) 0 24px">
+  <div style="max-width:1360px;margin:0 auto;padding:0 clamp(20px,4vw,40px);box-sizing:border-box">
+    <div style="background:var(--brand-100);border-radius:var(--radius-xl);padding:clamp(28px,5vw,56px) clamp(24px,5vw,64px);display:grid;grid-template-columns:{{ asstCols }};gap:clamp(32px,5vw,64px);align-items:center;position:relative;overflow:hidden">
+      <div style="display:flex;flex-direction:column;gap:20px;align-items:flex-start">
+        <div style="display:flex;align-items:center;gap:10px;font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:var(--brand-700)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M4 18.5V7a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H8.5z"></path><path d="M8.5 9.5h7M8.5 12.5h4"></path></svg><span>Asistente Anasac</span></div>
+        <h2 style="margin:0;font-family:var(--font-ui);font-weight:400;font-size:clamp(32px,3.1vw,44px);line-height:1.09;letter-spacing:-.05em;max-width:560px;text-wrap:balance">¿Necesitas ayuda específica?</h2>
+        <p style="margin:0;font-size:clamp(17px,1.4vw,20px);line-height:1.4;letter-spacing:-.02em;color:var(--text-secondary);max-width:32em;text-wrap:pretty">Nuestro asistente te ayuda a identificar el problema de tu planta, incluso con fotos, y te deriva con un asesor cuando lo necesites.</p>
+        <a href="#" onClick="{{ openChat }}" "#" style="display:inline-flex;align-items:center;gap:10px;height:44px;padding:0 26px;border-radius:999px;background:var(--brand-700);color:#fff;font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;margin-top:8px;transition:background .15s,transform .15s" style-hover="background:var(--brand-800);color:#fff" style-active="background:var(--brand-900);transform:scale(.98)">Hablar con el asistente <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+      </div>
+      <sc-if value="{{ showChat }}" hint-placeholder-val="{{ true }}"><div style="position:relative">
+        <sc-if value="{{ showArrow }}" hint-placeholder-val="{{ true }}">
+          <svg aria-hidden="true" viewBox="0 0 90 70" style="position:absolute;left:-84px;bottom:52px;width:84px;height:66px" fill="none" stroke="var(--brand-800)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10c10 34 34 50 72 46"></path><path d="M66 46l13 10-14 8"></path></svg>
+        </sc-if>
+        <div style="background:var(--surface-card);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);overflow:hidden">
+          <div style="display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border-subtle)">
+            <img src="assets/logo-mark.png" alt="" style="width:32px;height:32px;display:block">
+            <div style="font-weight:400;font-size:16px;line-height:24px;letter-spacing:-.01em">Asistente Anasac</div>
+            <span style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;color:var(--brand-700)"><span style="width:7px;height:7px;border-radius:50%;background:var(--brand-500)"></span>En línea</span>
+          </div>
+          <div style="padding:16px 20px;display:flex;flex-direction:column;gap:8px;font-size:14px;line-height:22px;letter-spacing:0">
+            <div data-chat-step="" style="align-self:flex-start;max-width:80%;background:var(--surface-warm);padding:9px 14px;border-radius:16px 16px 16px 6px">Hola, ¿qué le pasa a tu planta?</div>
+            <div data-chat-step="" style="align-self:flex-end;max-width:70%;background:var(--brand-700);color:#fff;padding:5px 12px 5px 5px;border-radius:16px 16px 6px 16px;display:flex;align-items:center;gap:10px">
+              <div style="width:44px;height:44px;flex:none;border-radius:11px;overflow:hidden;background:var(--brand-800);color:rgba(255,255,255,.6)"><img loading="lazy" decoding="async" src="assets/chat-hoja.webp" alt="Hoja con manchas" style="width:100%;height:100%;object-fit:cover;object-position:68% 60%;display:block"></div>
+              <span>Le salieron estas manchas</span>
+            </div>
+            <div data-chat-typing="" aria-hidden="true" style="display:none;align-self:flex-start;padding:12px 14px;border-radius:16px 16px 16px 6px;background:var(--surface-warm);gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:var(--brand-700);animation:chatdot 1.1s ease-in-out infinite"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--brand-700);animation:chatdot 1.1s ease-in-out .15s infinite"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--brand-700);animation:chatdot 1.1s ease-in-out .3s infinite"></span></div>
+            <div data-chat-step="" style="align-self:flex-start;max-width:88%;background:var(--surface-warm);padding:9px;border-radius:16px 16px 16px 6px;display:flex;flex-direction:column;gap:6px">
+              <span style="padding:0 5px 2px">Parece oídio, un hongo común en primavera. Así lo puedes tratar:</span>
+              <a data-chat-step="" href="#" style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:10px;background:#fff;border:1px solid var(--border-subtle);color:var(--text-primary);font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;transition:border-color .15s" style-hover="border-color:var(--brand-500);color:var(--text-primary)"><span style="flex:1">Cómo tratar el oídio <span style="font-weight:400;color:var(--text-secondary)">· 4 min de lectura</span></span><span style="color:var(--brand-700);display:flex"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a>
+              <a data-chat-step="" href="#" style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:10px;background:#fff;border:1px solid var(--border-subtle);color:var(--text-primary);font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;transition:border-color .15s" style-hover="border-color:var(--brand-500);color:var(--text-primary)"><span style="flex:1;display:flex;flex-direction:column;gap:2px">Ver fungicidas recomendados</span><span style="color:var(--brand-700);display:flex"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a>
+            </div>
+          </div>
+          <div style="margin:0 20px 20px;height:44px;border-radius:999px;border:1px solid var(--border-default);display:flex;align-items:center;padding:0 6px 0 18px;gap:8px;color:var(--text-muted);font-size:16px;line-height:24px;letter-spacing:-.01em">
+            <span style="flex:1">Escribe tu mensaje</span>
+            <span style="width:36px;height:36px;border-radius:50%;background:var(--brand-700);color:#fff;display:grid;place-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"></path></svg></span>
+          </div>
+        </div>
+      </div></sc-if>
+    </div>
+  </div>
+</section>
+
+<!-- 5 Hubs -->
+<section id="huerto" data-screen-label="¿Qué quieres cuidar hoy?" style="background:var(--surface-base);padding:clamp(48px,8vw,96px) 0 clamp(56px,8vw,112px)">
+  <div style="max-width:1360px;margin:0 auto;padding:0 clamp(20px,4vw,40px);box-sizing:border-box">
+    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:clamp(24px,4vw,48px);max-width:720px">
+      <div style="display:flex;align-items:center;gap:10px;font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:var(--brand-700)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path></svg><span>Tu jardín</span></div>
+      <h2 style="margin:0;font-family:var(--font-ui);font-weight:400;font-size:clamp(32px,3.1vw,44px);line-height:1.09;letter-spacing:-.05em;max-width:560px;text-wrap:balance">¿Qué quieres cuidar hoy?</h2>
+      <p style="margin:0;font-size:clamp(17px,1.4vw,20px);line-height:1.4;letter-spacing:-.02em;color:var(--text-secondary)">Encuentra guías, productos y soluciones según lo que estás cuidando.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat({{ hubN }},minmax(0,1fr));gap:clamp(12px,2vw,24px)">
+      <a data-hub="" href="#" style="position:relative;display:flex;flex-direction:column;gap:clamp(14px,1.6vw,20px);padding:clamp(12px,1.6vw,20px) clamp(12px,1.6vw,20px) clamp(18px,2vw,24px);border-radius:var(--radius-lg);background:var(--surface-warm);color:var(--text-primary);transition:transform .24s var(--ease-out),box-shadow .24s" style-hover="transform:translateY(-4px);box-shadow:var(--shadow-md);color:var(--text-primary)">
+        <div data-hub-blob="" style="aspect-ratio:1/1;border-radius:58% 42% 52% 48% / 46% 54% 46% 54%;transition:border-radius .7s cubic-bezier(.34,1.3,.5,1);overflow:hidden;background:var(--surface-sand);color:var(--text-secondary)"><img src="assets/hub-huerto.webp" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+        <div style="display:flex;flex-direction:column;gap:6px;padding:0 4px">
+          <div style="font-family:var(--font-ui);font-size:clamp(18px,1.6vw,22px);line-height:1.2;letter-spacing:-.02em;text-wrap:balance">Huerto casero</div>
+          <div style="font-size:clamp(14px,1.2vw,16px);line-height:1.45;letter-spacing:-.01em;color:var(--text-secondary);text-wrap:pretty">Cosecha en tu propio hogar</div>
+        </div>
+        <span aria-hidden="true" style="display:{{ hubArrowDisp }};position:absolute;top:clamp(20px,2.4vw,32px);right:clamp(20px,2.4vw,32px);width:44px;height:44px;border-radius:50%;background:var(--surface-card);color:var(--text-primary);place-items:center;box-shadow:var(--shadow-sm)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+      </a>
+      <a data-hub="" href="#" style="position:relative;display:flex;flex-direction:column;gap:clamp(14px,1.6vw,20px);padding:clamp(12px,1.6vw,20px) clamp(12px,1.6vw,20px) clamp(18px,2vw,24px);border-radius:var(--radius-lg);background:var(--surface-warm);color:var(--text-primary);transition:transform .24s var(--ease-out),box-shadow .24s" style-hover="transform:translateY(-4px);box-shadow:var(--shadow-md);color:var(--text-primary)">
+        <div data-hub-blob="" style="aspect-ratio:1/1;border-radius:44% 56% 40% 60% / 58% 44% 56% 42%;transition:border-radius .7s cubic-bezier(.34,1.3,.5,1);overflow:hidden;background:var(--surface-sand);color:var(--text-secondary)"><img src="assets/hub-pasto.webp" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+        <div style="display:flex;flex-direction:column;gap:6px;padding:0 4px">
+          <div style="font-family:var(--font-ui);font-size:clamp(18px,1.6vw,22px);line-height:1.2;letter-spacing:-.02em;text-wrap:balance">Césped y pasto</div>
+          <div style="font-size:clamp(14px,1.2vw,16px);line-height:1.45;letter-spacing:-.01em;color:var(--text-secondary);text-wrap:pretty">Un pasto verde todo el año</div>
+        </div>
+        <span aria-hidden="true" style="display:{{ hubArrowDisp }};position:absolute;top:clamp(20px,2.4vw,32px);right:clamp(20px,2.4vw,32px);width:44px;height:44px;border-radius:50%;background:var(--surface-card);color:var(--text-primary);place-items:center;box-shadow:var(--shadow-sm)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+      </a>
+      <a data-hub="" href="#" style="position:relative;display:flex;flex-direction:column;gap:clamp(14px,1.6vw,20px);padding:clamp(12px,1.6vw,20px) clamp(12px,1.6vw,20px) clamp(18px,2vw,24px);border-radius:var(--radius-lg);background:var(--surface-warm);color:var(--text-primary);transition:transform .24s var(--ease-out),box-shadow .24s" style-hover="transform:translateY(-4px);box-shadow:var(--shadow-md);color:var(--text-primary)">
+        <div data-hub-blob="" style="aspect-ratio:1/1;border-radius:50% 50% 46% 54% / 40% 56% 44% 60%;transition:border-radius .7s cubic-bezier(.34,1.3,.5,1);overflow:hidden;background:var(--surface-sand);color:var(--text-secondary)"><img src="assets/hub-interior.webp" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+        <div style="display:flex;flex-direction:column;gap:6px;padding:0 4px">
+          <div style="font-family:var(--font-ui);font-size:clamp(18px,1.6vw,22px);line-height:1.2;letter-spacing:-.02em;text-wrap:balance">Plantas de interior</div>
+          <div style="font-size:clamp(14px,1.2vw,16px);line-height:1.45;letter-spacing:-.01em;color:var(--text-secondary);text-wrap:pretty">Vida verde dentro de casa</div>
+        </div>
+        <span aria-hidden="true" style="display:{{ hubArrowDisp }};position:absolute;top:clamp(20px,2.4vw,32px);right:clamp(20px,2.4vw,32px);width:44px;height:44px;border-radius:50%;background:var(--surface-card);color:var(--text-primary);place-items:center;box-shadow:var(--shadow-sm)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+      </a>
+      <a data-hub="" href="#" style="position:relative;display:flex;flex-direction:column;gap:clamp(14px,1.6vw,20px);padding:clamp(12px,1.6vw,20px) clamp(12px,1.6vw,20px) clamp(18px,2vw,24px);border-radius:var(--radius-lg);background:var(--surface-warm);color:var(--text-primary);transition:transform .24s var(--ease-out),box-shadow .24s" style-hover="transform:translateY(-4px);box-shadow:var(--shadow-md);color:var(--text-primary)">
+        <div data-hub-blob="" style="aspect-ratio:1/1;border-radius:62% 38% 56% 44% / 50% 40% 60% 50%;transition:border-radius .7s cubic-bezier(.34,1.3,.5,1);overflow:hidden;background:var(--surface-sand);color:var(--text-secondary)"><img src="assets/hub-flores.webp" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+        <div style="display:flex;flex-direction:column;gap:6px;padding:0 4px">
+          <div style="font-family:var(--font-ui);font-size:clamp(18px,1.6vw,22px);line-height:1.2;letter-spacing:-.02em;text-wrap:balance">Flores y ornamentales</div>
+          <div style="font-size:clamp(14px,1.2vw,16px);line-height:1.45;letter-spacing:-.01em;color:var(--text-secondary);text-wrap:pretty">Cuida y haz florecer tu jardín</div>
+        </div>
+        <span aria-hidden="true" style="display:{{ hubArrowDisp }};position:absolute;top:clamp(20px,2.4vw,32px);right:clamp(20px,2.4vw,32px);width:44px;height:44px;border-radius:50%;background:var(--surface-card);color:var(--text-primary);place-items:center;box-shadow:var(--shadow-sm)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 6 Estacional -->
+<section id="estacional" data-screen-label="Módulo estacional" ref="{{ estRef }}" style="position:relative;height:{{ estSecH }};background:var(--brand-950);border-radius:clamp(28px,4vw,48px) clamp(28px,4vw,48px) 0 0">
+  <div style="position:{{ estStagePos }};top:{{ estStageTop }};height:{{ estStageH }};transition:top .35s cubic-bezier(.3,.7,.2,1),height .35s cubic-bezier(.3,.7,.2,1);overflow:hidden;border-radius:inherit;display:flex;flex-direction:column;justify-content:center;box-sizing:border-box">
+    <div style="position:absolute;inset:0;background:var(--brand-900);color:rgba(255,255,255,.6)">
+      <img src="assets/estacional-fondo.webp" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.7)">
+      <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(16,18,14,.7) 0%,rgba(16,18,14,.46) 45%,rgba(16,18,14,.12) 100%)"></div>
+    </div>
+    <div style="position:relative;z-index:1;pointer-events:none;width:100%;max-width:1360px;margin:0 auto;padding:{{ estPad }};box-sizing:border-box;display:grid;grid-template-columns:{{ estCols }};gap:clamp(32px,5vw,80px);align-items:center">
+    <div style="display:flex;flex-direction:column;gap:16px;max-width:520px;color:var(--text-inverse);text-shadow:0 1px 2px rgba(10,18,8,.4)">
+      <div style="display:flex;align-items:center;gap:10px;font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:rgba(255,255,255,.6)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"></path><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"></path></svg><span>{{ mes }} en tu jardín</span></div>
+      <h2 style="margin:0;font-family:var(--font-ui);font-weight:400;font-size:clamp(40px,4.4vw,60px);line-height:1.04;letter-spacing:-.05em;max-width:11em;text-wrap:balance;text-shadow:0 2px 18px rgba(10,14,8,.45)">Tu jardín en {{ enPlena }}</h2>
+      <p style="margin:0;font-size:clamp(17px,1.4vw,20px);line-height:1.4;letter-spacing:-.02em;color:rgba(255,255,255,.6);text-wrap:pretty">Tareas, siembras y cuidados recomendados<br>para este mes en Chile.</p>
+      <a href="#" style="pointer-events:auto;align-self:flex-start;display:inline-flex;align-items:center;gap:10px;height:44px;padding:0 20px 0 22px;margin-top:12px;border-radius:999px;background:#fff;color:var(--brand-950);font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;text-shadow:none;box-sizing:border-box;transition:background .15s,gap .2s" style-hover="background:var(--brand-100);color:var(--brand-950);gap:14px" style-active="transform:scale(.98)">Ver calendario completo del jardín <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+    </div>
+    <div style="display:{{ estStackDisplay }};flex-direction:column;gap:16px;align-items:start">
+      <a data-est-card="" href="#" style="transform-origin:50% 0;will-change:filter,transform;grid-area:{{ estArea }};margin-top:{{ estMt1 }};position:relative;z-index:1;pointer-events:auto;display:grid;grid-template-columns:{{ estCardCols }};border-radius:var(--radius-lg);background:var(--surface-card);overflow:hidden;color:var(--text-primary);box-shadow:var(--shadow-lg);transition:box-shadow .24s" style-hover="box-shadow:var(--shadow-lg);color:var(--text-primary)">
+        <div style="aspect-ratio:3/2;min-height:100%;background:var(--surface-sand);color:var(--text-secondary)"><img src="assets/est-suelo.webp" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+        <div style="padding:clamp(20px,2.4vw,32px);display:flex;flex-direction:column;gap:14px;align-items:flex-start;justify-content:center">
+          <span style="font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;padding:6px 12px;border-radius:999px;background:var(--earth-100);color:var(--earth-700)">Tarea del mes</span>
+          <div style="font-family:var(--font-ui);font-size:clamp(19px,1.6vw,22px);line-height:1.18;letter-spacing:-.02em;text-wrap:pretty">Acolcha el suelo antes del calor</div>
+          <span style="display:flex;align-items:center;gap:8px;font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;color:var(--brand-700);margin-top:4px">Ver guía <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+        </div>
+      </a>
+      <a data-est-card="" href="#" style="transform-origin:50% 0;will-change:filter,transform;grid-area:{{ estArea }};margin-top:{{ estMt2 }};position:relative;z-index:2;pointer-events:auto;display:grid;grid-template-columns:{{ estCardCols }};border-radius:var(--radius-lg);background:var(--surface-card);overflow:hidden;color:var(--text-primary);box-shadow:var(--shadow-lg);transition:box-shadow .24s" style-hover="box-shadow:var(--shadow-lg);color:var(--text-primary)">
+        <div style="aspect-ratio:3/2;min-height:100%;background:var(--surface-sand);color:var(--text-secondary)"><img src="assets/est-siembra.webp" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+        <div style="padding:clamp(20px,2.4vw,32px);display:flex;flex-direction:column;gap:14px;align-items:flex-start;justify-content:center">
+          <span style="font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;padding:6px 12px;border-radius:999px;background:var(--brand-100);color:var(--brand-800)">Siembra</span>
+          <div style="font-family:var(--font-ui);font-size:clamp(19px,1.6vw,22px);line-height:1.18;letter-spacing:-.02em;text-wrap:pretty">Qué plantar en {{ mesLower }}</div>
+          <span style="display:flex;align-items:center;gap:8px;font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;color:var(--brand-700);margin-top:4px">Ver guía <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+        </div>
+      </a>
+      <a data-est-card="" href="#" style="transform-origin:50% 0;will-change:filter,transform;grid-area:{{ estArea }};margin-top:{{ estMt3 }};position:relative;z-index:3;pointer-events:auto;display:grid;grid-template-columns:{{ estCardCols }};border-radius:var(--radius-lg);background:var(--surface-card);overflow:hidden;color:var(--text-primary);box-shadow:var(--shadow-lg);transition:box-shadow .24s" style-hover="box-shadow:var(--shadow-lg);color:var(--text-primary)">
+        <div style="aspect-ratio:3/2;min-height:100%;background:var(--surface-sand);color:var(--text-secondary)"><img src="assets/est-riego.webp" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+        <div style="padding:clamp(20px,2.4vw,32px);display:flex;flex-direction:column;gap:14px;align-items:flex-start;justify-content:center">
+          <span style="font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;padding:6px 12px;border-radius:999px;background:var(--sun-100);color:var(--sun-700)">Cuidado</span>
+          <div style="font-family:var(--font-ui);font-size:clamp(19px,1.6vw,22px);line-height:1.18;letter-spacing:-.02em;text-wrap:pretty">Riego eficiente en {{ temporadaLower }}</div>
+          <span style="display:flex;align-items:center;gap:8px;font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;color:var(--brand-700);margin-top:4px">Ver guía <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+        </div>
+      </a>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- 7 Inspírate -->
+<section id="inspirate" data-screen-label="Inspírate" style="background:var(--surface-base);padding:clamp(48px,8vw,104px) 0">
+  <div style="max-width:1360px;margin:0 auto;padding:0 clamp(20px,4vw,40px);box-sizing:border-box">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px 40px;margin-bottom:40px">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;gap:10px;font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:var(--brand-700)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"></path><path d="M19 15v4M17 17h4"></path></svg><span>Ideas para tu espacio</span></div>
+        <h2 style="margin:0;font-family:var(--font-ui);font-weight:400;font-size:clamp(32px,3.1vw,44px);line-height:1.09;letter-spacing:-.05em;max-width:560px;text-wrap:balance">Inspírate</h2>
+        <p style="margin:0;font-size:clamp(17px,1.4vw,20px);line-height:1.4;letter-spacing:-.02em;color:var(--text-secondary)">Ideas y proyectos para transformar tu espacio.</p>
+      </div>
+      <div style="display:flex;gap:12px">
+        <button aria-label="Anterior" onClick="{{ prev }}" style="width:52px;height:52px;border-radius:50%;border:1.5px solid var(--text-primary);background:transparent;color:var(--text-primary);display:grid;place-items:center;cursor:pointer;transition:background .15s" style-hover="background:var(--text-primary);color:var(--text-inverse)" style-active="transform:scale(.95)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></button>
+        <button aria-label="Siguiente" onClick="{{ next }}" style="width:52px;height:52px;border-radius:50%;border:1.5px solid var(--text-primary);background:transparent;color:var(--text-primary);display:grid;place-items:center;cursor:pointer;transition:background .15s" style-hover="background:var(--text-primary);color:var(--text-inverse)" style-active="transform:scale(.95)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+      </div>
+    </div>
+    <div ref="{{ trackRef }}" style="display:flex;gap:24px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;margin:0 calc(-1 * (clamp(20px,4vw,40px) + max(0px, (100vw - 1360px) / 2)));padding:0 calc((clamp(20px,4vw,40px) + max(0px, (100vw - 1360px) / 2))) 8px;scroll-padding:0 calc((clamp(20px,4vw,40px) + max(0px, (100vw - 1360px) / 2)))">
+      <a href="#" style="flex:0 0 min(380px,78vw);height:calc(min(380px,78vw) * 25 / 19);border-radius:var(--radius-lg);overflow:hidden;position:relative;scroll-snap-align:start;background:var(--surface-sand);color:var(--text-secondary);transition:flex-basis .45s cubic-bezier(.3,.7,.2,1)" style-hover="flex-basis:min(480px,88vw);color:var(--text-secondary)">
+        <img src="assets/insp-balcones.webp" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block">
+        <div style="position:absolute;inset:auto 0 0 0;height:70%;background:linear-gradient(to top,rgba(22,36,15,.88),rgba(22,36,15,.5) 45%,rgba(22,36,15,0));pointer-events:none"></div>
+        <div style="position:absolute;left:28px;right:28px;bottom:28px;display:flex;align-items:center;justify-content:space-between;color:#fff;pointer-events:none">
+          <span style="font-family:var(--font-ui);font-size:clamp(19px,1.6vw,22px);line-height:1.18;letter-spacing:-.02em;text-shadow:0 1px 12px rgba(10,18,8,.55)">Balcones</span>
+          <span style="width:48px;height:48px;border-radius:50%;background:#fff;color:var(--text-primary);display:grid;place-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"></path></svg></span>
+        </div>
+      </a>
+      <a href="#" style="flex:0 0 min(380px,78vw);height:calc(min(380px,78vw) * 25 / 19);border-radius:var(--radius-lg);overflow:hidden;position:relative;scroll-snap-align:start;background:var(--surface-sand);color:var(--text-secondary);transition:flex-basis .45s cubic-bezier(.3,.7,.2,1)" style-hover="flex-basis:min(480px,88vw);color:var(--text-secondary)">
+        <img src="assets/insp-huerto.webp" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block">
+        <div style="position:absolute;inset:auto 0 0 0;height:70%;background:linear-gradient(to top,rgba(22,36,15,.88),rgba(22,36,15,.5) 45%,rgba(22,36,15,0));pointer-events:none"></div>
+        <div style="position:absolute;left:28px;right:28px;bottom:28px;display:flex;align-items:center;justify-content:space-between;color:#fff;pointer-events:none">
+          <span style="font-family:var(--font-ui);font-size:clamp(19px,1.6vw,22px);line-height:1.18;letter-spacing:-.02em;text-shadow:0 1px 12px rgba(10,18,8,.55)">Huerto</span>
+          <span style="width:48px;height:48px;border-radius:50%;background:#fff;color:var(--text-primary);display:grid;place-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"></path></svg></span>
+        </div>
+      </a>
+      <a href="#" style="flex:0 0 min(380px,78vw);height:calc(min(380px,78vw) * 25 / 19);border-radius:var(--radius-lg);overflow:hidden;position:relative;scroll-snap-align:start;background:var(--surface-sand);color:var(--text-secondary);transition:flex-basis .45s cubic-bezier(.3,.7,.2,1)" style-hover="flex-basis:min(480px,88vw);color:var(--text-secondary)">
+        <img src="assets/insp-sust.webp" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block">
+        <div style="position:absolute;inset:auto 0 0 0;height:70%;background:linear-gradient(to top,rgba(22,36,15,.88),rgba(22,36,15,.5) 45%,rgba(22,36,15,0));pointer-events:none"></div>
+        <div style="position:absolute;left:28px;right:28px;bottom:28px;display:flex;align-items:center;justify-content:space-between;color:#fff;pointer-events:none">
+          <span style="font-family:var(--font-ui);font-size:clamp(19px,1.6vw,22px);line-height:1.18;letter-spacing:-.02em;text-shadow:0 1px 12px rgba(10,18,8,.55)">Sustentabilidad</span>
+          <span style="width:48px;height:48px;border-radius:50%;background:#fff;color:var(--text-primary);display:grid;place-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"></path></svg></span>
+        </div>
+      </a>
+      <a href="#" style="flex:0 0 min(380px,78vw);height:calc(min(380px,78vw) * 25 / 19);border-radius:var(--radius-lg);overflow:hidden;position:relative;scroll-snap-align:start;background:var(--surface-sand);color:var(--text-secondary);transition:flex-basis .45s cubic-bezier(.3,.7,.2,1)" style-hover="flex-basis:min(480px,88vw);color:var(--text-secondary)">
+        <img src="assets/insp-flores.webp" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block">
+        <div style="position:absolute;inset:auto 0 0 0;height:70%;background:linear-gradient(to top,rgba(22,36,15,.88),rgba(22,36,15,.5) 45%,rgba(22,36,15,0));pointer-events:none"></div>
+        <div style="position:absolute;left:28px;right:28px;bottom:28px;display:flex;align-items:center;justify-content:space-between;color:#fff;pointer-events:none">
+          <span style="font-family:var(--font-ui);font-size:clamp(19px,1.6vw,22px);line-height:1.18;letter-spacing:-.02em;text-shadow:0 1px 12px rgba(10,18,8,.55)">Flores</span>
+          <span style="width:48px;height:48px;border-radius:50%;background:#fff;color:var(--text-primary);display:grid;place-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"></path></svg></span>
+        </div>
+      </a>
+    </div>
+    <a href="#" style="display:inline-flex;align-items:center;gap:8px;font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;color:var(--brand-700);margin-top:32px;padding:12px 0" style-hover="color:var(--brand-900)">Ver todas las inspiraciones <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+  </div>
+</section>
+
+<!-- 8 Problemas -->
+<section id="problemas" data-screen-label="¿Tienes un problema?" style="background:var(--surface-warm);padding:clamp(48px,8vw,104px) 0">
+  <div style="max-width:1360px;margin:0 auto;padding:0 clamp(20px,4vw,40px);box-sizing:border-box">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:20px 40px;margin-bottom:clamp(24px,4vw,48px)">
+      <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;gap:10px;font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:var(--brand-700)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M4 11a7 7 0 1 0 14 0a7 7 0 1 0-14 0"></path><path d="M20 20l-3.5-3.5"></path></svg><span>Problemas y soluciones</span></div>
+      <h2 style="margin:0;font-family:var(--font-ui);font-weight:400;font-size:clamp(32px,3.1vw,44px);line-height:1.09;letter-spacing:-.05em;max-width:560px;text-wrap:balance">¿Tienes un problema?</h2>
+      <p style="margin:0;font-size:clamp(17px,1.4vw,20px);line-height:1.4;letter-spacing:-.02em;color:var(--text-secondary)">Los síntomas más consultados por nuestra comunidad.</p>
+      </div>
+      <a href="#" style="display:inline-flex;flex:none;align-items:center;gap:10px;height:44px;padding:0 26px;border-radius:999px;border:1.5px solid var(--text-primary);color:var(--text-primary);font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;box-sizing:border-box;transition:background .15s" style-hover="background:var(--text-primary);color:var(--text-inverse)" style-active="transform:scale(.98)">Ver todos los síntomas <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat({{ symN }},minmax(0,1fr));gap:clamp(10px,1.4vw,16px)">
+      <a href="#" style="display:flex;align-items:center;gap:clamp(10px,1.4vw,16px);min-height:clamp(72px,7vw,92px);padding:12px clamp(12px,1.6vw,20px) 12px clamp(10px,1.4vw,16px);box-sizing:border-box;border-radius:var(--radius-md);background:var(--surface-card);border:1px solid var(--border-subtle);color:var(--text-primary);transition:border-color .15s,background .15s" style-hover="border-color:var(--brand-400);background:var(--brand-50);color:var(--text-primary)">
+        <img loading="lazy" decoding="async" src="assets/sym-hojasamarillas.webp" alt="" aria-hidden="true" style="width:clamp(44px,4.4vw,56px);height:clamp(44px,4.4vw,56px);flex:none;object-fit:contain;display:block">
+        <span style="flex:1;font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400">Hojas amarillas</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+      </a>
+      <a href="#" style="display:flex;align-items:center;gap:clamp(10px,1.4vw,16px);min-height:clamp(72px,7vw,92px);padding:12px clamp(12px,1.6vw,20px) 12px clamp(10px,1.4vw,16px);box-sizing:border-box;border-radius:var(--radius-md);background:var(--surface-card);border:1px solid var(--border-subtle);color:var(--text-primary);transition:border-color .15s,background .15s" style-hover="border-color:var(--brand-400);background:var(--brand-50);color:var(--text-primary)">
+        <img loading="lazy" decoding="async" src="assets/sym-manchas.webp" alt="" aria-hidden="true" style="width:clamp(44px,4.4vw,56px);height:clamp(44px,4.4vw,56px);flex:none;object-fit:contain;display:block">
+        <span style="flex:1;font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400">Manchas en las hojas</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+      </a>
+      <a href="#" style="display:flex;align-items:center;gap:clamp(10px,1.4vw,16px);min-height:clamp(72px,7vw,92px);padding:12px clamp(12px,1.6vw,20px) 12px clamp(10px,1.4vw,16px);box-sizing:border-box;border-radius:var(--radius-md);background:var(--surface-card);border:1px solid var(--border-subtle);color:var(--text-primary);transition:border-color .15s,background .15s" style-hover="border-color:var(--brand-400);background:var(--brand-50);color:var(--text-primary)">
+        <img loading="lazy" decoding="async" src="assets/sym-pulgones.webp" alt="" aria-hidden="true" style="width:clamp(44px,4.4vw,56px);height:clamp(44px,4.4vw,56px);flex:none;object-fit:contain;display:block">
+        <span style="flex:1;font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400">Pulgones</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+      </a>
+      <a href="#" style="display:flex;align-items:center;gap:clamp(10px,1.4vw,16px);min-height:clamp(72px,7vw,92px);padding:12px clamp(12px,1.6vw,20px) 12px clamp(10px,1.4vw,16px);box-sizing:border-box;border-radius:var(--radius-md);background:var(--surface-card);border:1px solid var(--border-subtle);color:var(--text-primary);transition:border-color .15s,background .15s" style-hover="border-color:var(--brand-400);background:var(--brand-50);color:var(--text-primary)">
+        <img loading="lazy" decoding="async" src="assets/sym-pastoamarillo.webp" alt="" aria-hidden="true" style="width:clamp(44px,4.4vw,56px);height:clamp(44px,4.4vw,56px);flex:none;object-fit:contain;display:block">
+        <span style="flex:1;font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400">Pasto amarillo</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+      </a>
+      <a href="#" style="display:flex;align-items:center;gap:clamp(10px,1.4vw,16px);min-height:clamp(72px,7vw,92px);padding:12px clamp(12px,1.6vw,20px) 12px clamp(10px,1.4vw,16px);box-sizing:border-box;border-radius:var(--radius-md);background:var(--surface-card);border:1px solid var(--border-subtle);color:var(--text-primary);transition:border-color .15s,background .15s" style-hover="border-color:var(--brand-400);background:var(--brand-50);color:var(--text-primary)">
+        <img loading="lazy" decoding="async" src="assets/sym-marchito.webp" alt="" aria-hidden="true" style="width:clamp(44px,4.4vw,56px);height:clamp(44px,4.4vw,56px);flex:none;object-fit:contain;display:block">
+        <span style="flex:1;font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400">Planta marchita</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+      </a>
+      <a href="#" style="display:flex;align-items:center;gap:clamp(10px,1.4vw,16px);min-height:clamp(72px,7vw,92px);padding:12px clamp(12px,1.6vw,20px) 12px clamp(10px,1.4vw,16px);box-sizing:border-box;border-radius:var(--radius-md);background:var(--surface-card);border:1px solid var(--border-subtle);color:var(--text-primary);transition:border-color .15s,background .15s" style-hover="border-color:var(--brand-400);background:var(--brand-50);color:var(--text-primary)">
+        <img loading="lazy" decoding="async" src="assets/sym-caracoles.webp" alt="" aria-hidden="true" style="width:clamp(44px,4.4vw,56px);height:clamp(44px,4.4vw,56px);flex:none;object-fit:contain;display:block">
+        <span style="flex:1;font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400">Caracoles y babosas</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+      </a>
+      <a href="#" style="display:flex;align-items:center;gap:clamp(10px,1.4vw,16px);min-height:clamp(72px,7vw,92px);padding:12px clamp(12px,1.6vw,20px) 12px clamp(10px,1.4vw,16px);box-sizing:border-box;border-radius:var(--radius-md);background:var(--surface-card);border:1px solid var(--border-subtle);color:var(--text-primary);transition:border-color .15s,background .15s" style-hover="border-color:var(--brand-400);background:var(--brand-50);color:var(--text-primary)">
+        <img loading="lazy" decoding="async" src="assets/sym-hongos.webp" alt="" aria-hidden="true" style="width:clamp(44px,4.4vw,56px);height:clamp(44px,4.4vw,56px);flex:none;object-fit:contain;display:block">
+        <span style="flex:1;font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400">Hongos</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+      </a>
+      <a href="#" style="display:flex;align-items:center;gap:clamp(10px,1.4vw,16px);min-height:clamp(72px,7vw,92px);padding:12px clamp(12px,1.6vw,20px) 12px clamp(10px,1.4vw,16px);box-sizing:border-box;border-radius:var(--radius-md);background:var(--surface-card);border:1px solid var(--border-subtle);color:var(--text-primary);transition:border-color .15s,background .15s" style-hover="border-color:var(--brand-400);background:var(--brand-50);color:var(--text-primary)">
+        <img loading="lazy" decoding="async" src="assets/sym-suelo.webp" alt="" aria-hidden="true" style="width:clamp(44px,4.4vw,56px);height:clamp(44px,4.4vw,56px);flex:none;object-fit:contain;display:block">
+        <span style="flex:1;font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400">Suelo seco</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 9 Micro-guías -->
+<section id="guias" data-screen-label="Micro-guías" style="background:var(--surface-base);padding:clamp(48px,8vw,104px) 0 clamp(56px,8vw,112px)">
+  <div style="max-width:1360px;margin:0 auto;padding:0 clamp(20px,4vw,40px);box-sizing:border-box">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px 40px;margin-bottom:clamp(24px,4vw,48px)">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;gap:10px;font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:var(--brand-700)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg><span>Guías en 5 minutos</span></div>
+        <h2 style="margin:0;font-family:var(--font-ui);font-weight:400;font-size:clamp(32px,3.1vw,44px);line-height:1.09;letter-spacing:-.05em;max-width:560px;text-wrap:balance">Micro-guías destacadas</h2>
+        <p style="margin:0;font-size:clamp(17px,1.4vw,20px);line-height:1.4;letter-spacing:-.02em;color:var(--text-secondary)">Contenido corto, práctico y validado por nuestros expertos.</p>
+      </div>
+      <a href="#" style="display:flex;align-items:center;gap:8px;font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;color:var(--brand-700);flex:none;padding:12px 0" style-hover="color:var(--brand-900)">Ver todas las micro-guías <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat({{ guideN }},minmax(0,1fr));gap:clamp(20px,2vw,24px) clamp(12px,2vw,24px)">
+      <a data-hub="" href="#" style="display:flex;flex-direction:column;gap:18px;color:var(--text-primary)" style-hover="color:var(--brand-800)">
+        <div style="aspect-ratio:4/3;border-radius:var(--radius-md);overflow:hidden;background:var(--surface-sand);color:var(--text-secondary)"><img src="assets/guia-airear.webp" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+        <div style="display:flex;flex-direction:column;gap:10px;padding:0 4px">
+          <span style="font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:var(--brand-700)">Cuidado del pasto</span>
+          <span style="font-family:var(--font-ui);font-size:clamp(19px,1.6vw,22px);line-height:1.18;letter-spacing:-.02em;text-wrap:pretty">Cómo airear tu pasto paso a paso</span>
+          <span style="display:flex;align-items:center;justify-content:space-between;margin-top:4px;font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-muted)"><span style="display:flex;align-items:center;gap:6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M12 7v5l3 2"></path></svg>5 min de lectura</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+        </div>
+      </a>
+      <a data-hub="" href="#" style="display:flex;flex-direction:column;gap:18px;color:var(--text-primary)" style-hover="color:var(--brand-800)">
+        <div style="aspect-ratio:4/3;border-radius:var(--radius-md);overflow:hidden;background:var(--surface-sand);color:var(--text-secondary)"><img src="assets/guia-trasplante.webp" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+        <div style="display:flex;flex-direction:column;gap:10px;padding:0 4px">
+          <span style="font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:var(--brand-700)">Plantas de interior</span>
+          <span style="font-family:var(--font-ui);font-size:clamp(19px,1.6vw,22px);line-height:1.18;letter-spacing:-.02em;text-wrap:pretty">Trasplantar sin dañar las raíces</span>
+          <span style="display:flex;align-items:center;justify-content:space-between;margin-top:4px;font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-muted)"><span style="display:flex;align-items:center;gap:6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M12 7v5l3 2"></path></svg>4 min de lectura</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+        </div>
+      </a>
+      <a data-hub="" href="#" style="display:flex;flex-direction:column;gap:18px;color:var(--text-primary)" style-hover="color:var(--brand-800)">
+        <div style="aspect-ratio:4/3;border-radius:var(--radius-md);overflow:hidden;background:var(--surface-sand);color:var(--text-secondary)"><img src="assets/guia-riego.webp" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+        <div style="display:flex;flex-direction:column;gap:10px;padding:0 4px">
+          <span style="font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:var(--brand-700)">Riego</span>
+          <span style="font-family:var(--font-ui);font-size:clamp(19px,1.6vw,22px);line-height:1.18;letter-spacing:-.02em;text-wrap:pretty">Riego eficiente en verano</span>
+          <span style="display:flex;align-items:center;justify-content:space-between;margin-top:4px;font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-muted)"><span style="display:flex;align-items:center;gap:6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M12 7v5l3 2"></path></svg>6 min de lectura</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+        </div>
+      </a>
+      <a data-hub="" href="#" style="display:flex;flex-direction:column;gap:18px;color:var(--text-primary)" style-hover="color:var(--brand-800)">
+        <div style="aspect-ratio:4/3;border-radius:var(--radius-md);overflow:hidden;background:var(--surface-sand);color:var(--text-secondary)"><img src="assets/guia-compost.webp" alt="" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+        <div style="display:flex;flex-direction:column;gap:10px;padding:0 4px">
+          <span style="font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:var(--brand-700)">Huerto casero</span>
+          <span style="font-family:var(--font-ui);font-size:clamp(19px,1.6vw,22px);line-height:1.18;letter-spacing:-.02em;text-wrap:pretty">Cómo hacer compost en casa</span>
+          <span style="display:flex;align-items:center;justify-content:space-between;margin-top:4px;font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-muted)"><span style="display:flex;align-items:center;gap:6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M12 7v5l3 2"></path></svg>7 min de lectura</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 10 Profesional -->
+<section data-screen-label="Profesional" style="position:relative;overflow:hidden;background-color:#2b3a22;color:#fff">
+  <img loading="lazy" decoding="async" src="assets/pro-fondo2.webp" alt="" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:75% 30%;display:block">
+  <div aria-hidden="true" style="position:absolute;inset:0;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 15%,transparent 50%);mask-image:linear-gradient(90deg,#000 0%,#000 15%,transparent 50%)"></div>
+  <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,20,12,.8) 0%,rgba(15,20,12,.66) 45%,rgba(15,20,12,.3) 75%,rgba(15,20,12,.14) 100%)"></div>
+  <div style="position:relative;max-width:1360px;margin:0 auto;padding:clamp(80px,11vw,140px) clamp(20px,4vw,40px);box-sizing:border-box;display:grid;grid-template-columns:{{ proCols }};gap:clamp(28px,5vw,64px);align-items:end;justify-items:start">
+    <div style="display:flex;flex-direction:column;gap:20px;max-width:820px">
+      <div style="display:flex;align-items:center;gap:10px;font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:rgba(255,255,255,.6)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"></path></svg><span>Para profesionales</span></div>
+      <h2 style="margin:0;font-family:var(--font-ui);font-weight:400;font-size:clamp(32px,3.1vw,44px);line-height:1.09;letter-spacing:-.05em;text-wrap:balance;max-width:560px;text-wrap:balance">¿Trabajas en jardinería, agricultura o mantención?</h2>
+      <p style="margin:0;font-size:clamp(17px,1.4vw,20px);line-height:1.4;letter-spacing:-.02em;color:rgba(255,255,255,.6);max-width:36em">Accede al catálogo profesional con fichas técnicas, hojas de seguridad y contacto comercial directo.</p>
+    </div>
+    <a href="#" style="display:inline-flex;align-items:center;gap:12px;height:44px;padding:0 30px;border-radius:999px;background:#fff;color:var(--brand-700);font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;transition:background .15s,transform .15s;flex:none" style-hover="background:var(--brand-100);color:var(--brand-800)" style-active="transform:scale(.98)">Ir al sitio profesional <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+  </div>
+</section>
+
+<!-- 11 Dónde comprar -->
+<section id="donde-comprar" data-screen-label="Dónde comprar" style="background:var(--surface-base);padding:clamp(48px,8vw,104px) 0">
+  <div style="max-width:1360px;margin:0 auto;padding:0 clamp(20px,4vw,40px);box-sizing:border-box;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:clamp(28px,4vw,56px);align-items:stretch">
+    <div style="display:flex;flex-direction:column;gap:clamp(28px,3vw,40px)">
+      <div style="display:flex;flex-direction:column;gap:14px;max-width:620px">
+        <div style="display:flex;align-items:center;gap:10px;font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:var(--brand-700)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M3 9l1.5-5h15L21 9"></path><path d="M3 9h18v1a3 3 0 0 1-6 0a3 3 0 0 1-6 0a3 3 0 0 1-6 0z"></path><path d="M5 13v7h14v-7"></path></svg><span>Dónde comprar</span></div>
+        <h2 style="margin:0;font-family:var(--font-ui);font-weight:400;font-size:clamp(32px,3.1vw,44px);line-height:1.09;letter-spacing:-.05em;max-width:560px;text-wrap:balance">Encuentra Anasac Jardín<br>cerca de ti</h2>
+        <p style="margin:0;font-size:clamp(17px,1.4vw,20px);line-height:1.4;letter-spacing:-.02em;color:var(--text-secondary)">Disponible en los principales retailers, viveros y ferreterías de Chile.</p>
+        <a href="#" style="display:inline-flex;flex:none;align-self:flex-start;margin-top:10px;align-items:center;gap:10px;height:44px;padding:0 26px;border-radius:999px;border:1.5px solid var(--text-primary);color:var(--text-primary);font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;box-sizing:border-box;transition:background .15s" style-hover="background:var(--text-primary);color:var(--text-inverse)" style-active="transform:scale(.98)">Ver todos los puntos de venta <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-content:start;gap:clamp(10px,1.4vw,16px);width:100%;margin:0">
+      <div style="height:clamp(84px,8vw,120px);border-radius:var(--radius-md);background:var(--surface-card);display:grid;place-items:center;font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-muted);border:1px solid var(--border-subtle)">Logo retailer 1</div>
+      <div style="height:clamp(84px,8vw,120px);border-radius:var(--radius-md);background:var(--surface-card);display:grid;place-items:center;font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-muted);border:1px solid var(--border-subtle)">Logo retailer 2</div>
+      <div style="height:clamp(84px,8vw,120px);border-radius:var(--radius-md);background:var(--surface-card);display:grid;place-items:center;font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-muted);border:1px solid var(--border-subtle)">Logo retailer 3</div>
+      <div style="height:clamp(84px,8vw,120px);border-radius:var(--radius-md);background:var(--surface-card);display:grid;place-items:center;font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-muted);border:1px solid var(--border-subtle)">Logo retailer 4</div>
+      <div style="height:clamp(84px,8vw,120px);border-radius:var(--radius-md);background:var(--surface-card);display:grid;place-items:center;font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-muted);border:1px solid var(--border-subtle)">Logo retailer 5</div>
+      <div style="height:clamp(84px,8vw,120px);border-radius:var(--radius-md);background:var(--surface-card);display:grid;place-items:center;font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-muted);border:1px solid var(--border-subtle)">Logo retailer 6</div>
+      </div>
+    </div>
+    <div data-map="" style="position:relative;min-height:360px;height:100%;border-radius:var(--radius-lg);overflow:hidden;background:#f5f5f3;box-shadow:0 0 0 1px var(--border-subtle);touch-action:none;cursor:grab;user-select:none">
+        <div data-map-layer="" style="position:absolute;left:0;top:0;width:100%;aspect-ratio:1;transform-origin:0 0;will-change:transform">
+        <img src="assets/santiago-map.png" alt="Mapa de Santiago" draggable="false" style="position:absolute;inset:0;width:100%;height:100%;display:block;user-select:none;pointer-events:none">
+        <button type="button" data-pin="" aria-label="Vivero Los Aromos" style="position:absolute;left:58.5%;top:39%;transform:translate(-50%,-50%);width:36px;height:36px;padding:0;border:0;background:transparent;cursor:pointer;z-index:1"><span style="position:absolute;inset:0;border-radius:50%;background:var(--brand-800);box-shadow:0 0 0 4px rgba(255,255,255,.85),0 6px 14px rgba(22,36,15,.35);display:grid;place-items:center;transition:transform .15s" style-hover="transform:scale(1.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"></path><path d="M9.5 9.5a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0"></path></svg></span><span data-pin-card="" style="position:absolute;top:calc(100% + 10px);right:-14px;width:236px;padding:14px 16px;border-radius:16px;background:#fff;box-shadow:0 0 0 1px var(--border-subtle),0 16px 36px -12px rgba(38,35,30,.35);display:flex;flex-direction:column;gap:6px;text-align:left;opacity:0;transform:translateY(4px);pointer-events:none;transition:opacity .18s,transform .18s"><span style="align-self:flex-start;font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;padding:4px 8px;border-radius:999px;background:var(--brand-100);color:var(--brand-800)">Vivero</span><span style="font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;color:var(--text-primary)">Vivero Los Aromos</span><span style="font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-secondary)">Av. Providencia 2140, Providencia</span><span style="font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-muted)">Lun a Dom · 9:00 a 19:00</span></span></button>
+        <button type="button" data-pin="" aria-label="Ferretería Central" style="position:absolute;left:46.5%;top:46.5%;transform:translate(-50%,-50%);width:36px;height:36px;padding:0;border:0;background:transparent;cursor:pointer;z-index:1"><span style="position:absolute;inset:0;border-radius:50%;background:var(--brand-800);box-shadow:0 0 0 4px rgba(255,255,255,.85),0 6px 14px rgba(22,36,15,.35);display:grid;place-items:center;transition:transform .15s" style-hover="transform:scale(1.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"></path><path d="M9.5 9.5a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0"></path></svg></span><span data-pin-card="" style="position:absolute;top:calc(100% + 10px);left:-14px;width:236px;padding:14px 16px;border-radius:16px;background:#fff;box-shadow:0 0 0 1px var(--border-subtle),0 16px 36px -12px rgba(38,35,30,.35);display:flex;flex-direction:column;gap:6px;text-align:left;opacity:0;transform:translateY(4px);pointer-events:none;transition:opacity .18s,transform .18s"><span style="align-self:flex-start;font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;padding:4px 8px;border-radius:999px;background:var(--brand-100);color:var(--brand-800)">Ferretería</span><span style="font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;color:var(--text-primary)">Ferretería Central</span><span style="font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-secondary)">San Diego 845, Santiago Centro</span><span style="font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-muted)">Lun a Sáb · 9:00 a 20:00</span></span></button>
+        <button type="button" data-pin="" aria-label="Vivero El Roble" style="position:absolute;left:82%;top:36%;transform:translate(-50%,-50%);width:36px;height:36px;padding:0;border:0;background:transparent;cursor:pointer;z-index:1"><span style="position:absolute;inset:0;border-radius:50%;background:var(--brand-800);box-shadow:0 0 0 4px rgba(255,255,255,.85),0 6px 14px rgba(22,36,15,.35);display:grid;place-items:center;transition:transform .15s" style-hover="transform:scale(1.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"></path><path d="M9.5 9.5a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0"></path></svg></span><span data-pin-card="" style="position:absolute;top:calc(100% + 10px);right:-14px;width:236px;padding:14px 16px;border-radius:16px;background:#fff;box-shadow:0 0 0 1px var(--border-subtle),0 16px 36px -12px rgba(38,35,30,.35);display:flex;flex-direction:column;gap:6px;text-align:left;opacity:0;transform:translateY(4px);pointer-events:none;transition:opacity .18s,transform .18s"><span style="align-self:flex-start;font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;padding:4px 8px;border-radius:999px;background:var(--brand-100);color:var(--brand-800)">Vivero</span><span style="font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;color:var(--text-primary)">Vivero El Roble</span><span style="font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-secondary)">Av. Las Condes 9870, Las Condes</span><span style="font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-muted)">Lun a Dom · 10:00 a 19:30</span></span></button>
+        <button type="button" data-pin="" aria-label="Sucursal Anasac Ñuñoa" style="position:absolute;left:62%;top:52%;transform:translate(-50%,-50%);width:36px;height:36px;padding:0;border:0;background:transparent;cursor:pointer;z-index:1"><span style="position:absolute;inset:0;border-radius:50%;background:var(--brand-800);box-shadow:0 0 0 4px rgba(255,255,255,.85),0 6px 14px rgba(22,36,15,.35);display:grid;place-items:center;transition:transform .15s" style-hover="transform:scale(1.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"></path><path d="M9.5 9.5a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0"></path></svg></span><span data-pin-card="" style="position:absolute;bottom:calc(100% + 10px);right:-14px;width:236px;padding:14px 16px;border-radius:16px;background:#fff;box-shadow:0 0 0 1px var(--border-subtle),0 16px 36px -12px rgba(38,35,30,.35);display:flex;flex-direction:column;gap:6px;text-align:left;opacity:0;transform:translateY(4px);pointer-events:none;transition:opacity .18s,transform .18s"><span style="align-self:flex-start;font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;padding:4px 8px;border-radius:999px;background:var(--brand-100);color:var(--brand-800)">Sucursal Anasac</span><span style="font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;color:var(--text-primary)">Sucursal Anasac Ñuñoa</span><span style="font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-secondary)">Irarrázaval 3320, Ñuñoa</span><span style="font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-muted)">Lun a Vie · 9:00 a 18:00</span></span></button>
+        <button type="button" data-pin="" aria-label="Garden La Florida" style="position:absolute;left:65%;top:72.5%;transform:translate(-50%,-50%);width:36px;height:36px;padding:0;border:0;background:transparent;cursor:pointer;z-index:1"><span style="position:absolute;inset:0;border-radius:50%;background:var(--brand-800);box-shadow:0 0 0 4px rgba(255,255,255,.85),0 6px 14px rgba(22,36,15,.35);display:grid;place-items:center;transition:transform .15s" style-hover="transform:scale(1.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"></path><path d="M9.5 9.5a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0"></path></svg></span><span data-pin-card="" style="position:absolute;bottom:calc(100% + 10px);right:-14px;width:236px;padding:14px 16px;border-radius:16px;background:#fff;box-shadow:0 0 0 1px var(--border-subtle),0 16px 36px -12px rgba(38,35,30,.35);display:flex;flex-direction:column;gap:6px;text-align:left;opacity:0;transform:translateY(4px);pointer-events:none;transition:opacity .18s,transform .18s"><span style="align-self:flex-start;font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;padding:4px 8px;border-radius:999px;background:var(--brand-100);color:var(--brand-800)">Ferretería</span><span style="font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;color:var(--text-primary)">Garden La Florida</span><span style="font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-secondary)">Vicuña Mackenna 7110, La Florida</span><span style="font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-muted)">Lun a Dom · 10:00 a 21:00</span></span></button>
+        <button type="button" data-pin="" aria-label="Vivero Maipú Verde" style="position:absolute;left:17%;top:69%;transform:translate(-50%,-50%);width:36px;height:36px;padding:0;border:0;background:transparent;cursor:pointer;z-index:1"><span style="position:absolute;inset:0;border-radius:50%;background:var(--brand-800);box-shadow:0 0 0 4px rgba(255,255,255,.85),0 6px 14px rgba(22,36,15,.35);display:grid;place-items:center;transition:transform .15s" style-hover="transform:scale(1.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"></path><path d="M9.5 9.5a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0"></path></svg></span><span data-pin-card="" style="position:absolute;bottom:calc(100% + 10px);left:-14px;width:236px;padding:14px 16px;border-radius:16px;background:#fff;box-shadow:0 0 0 1px var(--border-subtle),0 16px 36px -12px rgba(38,35,30,.35);display:flex;flex-direction:column;gap:6px;text-align:left;opacity:0;transform:translateY(4px);pointer-events:none;transition:opacity .18s,transform .18s"><span style="align-self:flex-start;font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;padding:4px 8px;border-radius:999px;background:var(--brand-100);color:var(--brand-800)">Vivero</span><span style="font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;color:var(--text-primary)">Vivero Maipú Verde</span><span style="font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-secondary)">Av. Pajaritos 2450, Maipú</span><span style="font-size:14px;line-height:22px;letter-spacing:0;color:var(--text-muted)">Mar a Dom · 9:30 a 18:30</span></span></button>
+        </div>
+        <div style="position:absolute;right:16px;bottom:16px;z-index:6;display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;flex-direction:column;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 0 0 1px var(--border-subtle),0 6px 16px -6px rgba(38,35,30,.3)">
+            <button type="button" data-map-zoom="in" aria-label="Acercar" style="width:40px;height:40px;display:grid;place-items:center;border:0;background:#fff;color:var(--text-primary);cursor:pointer;padding:0;border-bottom:1px solid var(--border-subtle)" style-hover="background:var(--brand-50)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg></button>
+            <button type="button" data-map-zoom="out" aria-label="Alejar" style="width:40px;height:40px;display:grid;place-items:center;border:0;background:#fff;color:var(--text-primary);cursor:pointer;padding:0" style-hover="background:var(--brand-50)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5 12h14"></path></svg></button>
+          </div>
+          <button type="button" data-map-zoom="reset" aria-label="Centrar mapa" style="width:40px;height:40px;display:grid;place-items:center;border:0;background:#fff;color:var(--text-primary);cursor:pointer;padding:0;border-radius:12px;box-shadow:0 0 0 1px var(--border-subtle),0 6px 16px -6px rgba(38,35,30,.3)" style-hover="background:var(--brand-50)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="12" cy="12" r="7"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path></svg></button>
+        </div>
+      </div>
+  </div>
+</section>
+
+<!-- 12 Footer -->
+<footer data-screen-label="Footer" style="background:var(--brand-950);color:var(--text-inverse)">
+  <div style="max-width:1360px;margin:0 auto;padding:clamp(56px,7vw,88px) clamp(20px,4vw,40px) 28px;box-sizing:border-box">
+    <div style="display:grid;grid-template-columns:{{ footCols }};gap:clamp(32px,4vw,48px)">
+      <div style="display:flex;flex-direction:column;gap:24px">
+        <div style="display:flex;align-items:center;gap:14px">
+          <img src="assets/logo-anasac-reverse.png" alt="Anasac" style="height:38px;width:auto;display:block">
+          <span style="width:1px;height:30px;background:rgba(246,241,231,.25)"></span>
+          <span style="font-family:'Figtree',system-ui,sans-serif;font-weight:500;letter-spacing:-.02em;font-size:27px;font-weight:500;color:var(--brand-200);line-height:1">Jardín</span>
+        </div>
+        <p style="margin:0;font-size:16px;line-height:24px;letter-spacing:-.01em;color:rgba(255,255,255,.6);max-width:24em">Cuidamos tu jardín con soluciones simples, probadas y hechas para tu casa.</p>
+        <div style="display:flex;gap:10px">
+          <a href="#" aria-label="Instagram" style="width:44px;height:44px;border-radius:50%;border:1px solid rgba(246,241,231,.3);color:var(--text-inverse);display:grid;place-items:center;font-size:14px;line-height:22px;letter-spacing:0;font-weight:400" style-hover="background:var(--brand-400);border-color:var(--brand-400);color:var(--brand-950)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"></circle></svg></a>
+          <a href="#" aria-label="Facebook" style="width:44px;height:44px;border-radius:50%;border:1px solid rgba(246,241,231,.3);color:var(--text-inverse);display:grid;place-items:center;font-size:14px;line-height:22px;letter-spacing:0;font-weight:400" style-hover="background:var(--brand-400);border-color:var(--brand-400);color:var(--brand-950)"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.9.3-1.5 1.5-1.5h1.6V4.4c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.2H7.8v3h2.6V21z"></path></svg></a>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;font-size:16px;line-height:24px;letter-spacing:-.01em">
+        <div style="font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:4px">Explora</div>
+        <a href="#" style="color:rgba(255,255,255,.6)" style-hover="color:#fff">Inicio</a>
+        <a href="#" style="color:rgba(255,255,255,.6)" style-hover="color:#fff">Problemas y soluciones</a>
+        <a href="#" style="color:rgba(255,255,255,.6)" style-hover="color:#fff">Tu jardín</a>
+        <a href="#" style="color:rgba(255,255,255,.6)" style-hover="color:#fff">Inspírate</a>
+        <a href="#" style="color:rgba(255,255,255,.6)" style-hover="color:#fff">Productos</a>
+        <a href="#" style="color:rgba(255,255,255,.6)" style-hover="color:#fff">Dónde comprar</a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;font-size:16px;line-height:24px;letter-spacing:-.01em">
+        <div style="font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:4px">Contacto</div>
+        <a href="#" style="color:rgba(255,255,255,.6)" style-hover="color:#fff">Escríbenos por WhatsApp</a>
+        <a href="#" style="color:rgba(255,255,255,.6)" style-hover="color:#fff">Contacto asesoría</a>
+        <a href="#" style="color:rgba(255,255,255,.6)" style-hover="color:#fff">Sobre Anasac Jardín</a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:4px">Newsletter</div>
+        <div style="font-family:var(--font-ui);font-size:clamp(18px,1.6vw,22px);line-height:1.2;letter-spacing:-.02em;text-wrap:balance">Recibe consejos y novedades</div>
+        <form style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px" onSubmit="{{ noSubmit }}">
+          <input type="email" placeholder="tu@email.cl" aria-label="Email" style="flex:1 1 200px;min-width:0;height:44px;border-radius:999px;border:1px solid rgba(246,241,231,.3);background:rgba(246,241,231,.06);color:#fff;padding:0 20px;font:inherit;font-size:16px;line-height:24px;letter-spacing:-.01em;outline:none" style-focus="border-color:var(--brand-300);background:rgba(246,241,231,.1)">
+          <button type="submit" style="height:44px;padding:0 24px;border-radius:999px;border:0;background:var(--brand-300);color:var(--brand-950);font:inherit;font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;cursor:pointer" style-hover="background:var(--brand-200)" style-active="transform:scale(.98)">Suscribirme</button>
+        </form>
+      </div>
+    </div>
+    <div style="margin-top:clamp(40px,6vw,72px);padding-top:24px;padding-right:clamp(72px,7vw,96px);border-top:1px solid rgba(246,241,231,.14);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 24px;font-size:14px;line-height:22px;letter-spacing:0;color:rgba(255,255,255,.6)">
+      <span>© 2026 Anasac Jardín</span>
+      <span>Desarrollado por <a href="https://deltadigital.cl" target="_blank" rel="noopener" style="color:#fff;font-weight:400" style-hover="color:#fff">DeltaDigital</a></span>
+    </div>
+  </div>
+</footer>
+
+
+<div role="dialog" aria-label="Asistente Anasac" style="position:fixed;right:clamp(16px,2.4vw,32px);bottom:calc(clamp(16px,2.4vw,32px) + clamp(56px,5vw,64px) + 14px);z-index:61;width:min(400px,calc(100vw - 32px));height:min(620px,calc(100svh - 150px));border-radius:24px;background:#fff;box-shadow:0 0 0 1px var(--border-subtle),0 30px 70px -20px rgba(22,36,15,.4);display:flex;flex-direction:column;overflow:hidden;transform-origin:100% 100%;transition:opacity .25s ease,transform .3s cubic-bezier(.3,.7,.2,1);opacity:{{ chatO }};transform:{{ chatT }};pointer-events:{{ chatPE }};visibility:{{ chatVis }}">
+  <div style="display:flex;align-items:center;gap:12px;padding:14px 14px 14px 18px;border-bottom:1px solid var(--border-subtle);background:var(--surface-base)">
+    <img src="assets/logo-mark.png" alt="" style="width:36px;height:36px;display:block">
+    <div style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-weight:400;font-size:16px;line-height:24px;letter-spacing:-.01em">Asistente Anasac</span><span style="display:flex;align-items:center;gap:6px;font-size:12px;line-height:16px;letter-spacing:.02em;font-weight:400;color:var(--brand-700)"><span style="width:7px;height:7px;border-radius:50%;background:var(--brand-500)"></span>En línea · responde en segundos</span></div>
+    <button type="button" aria-label="Cerrar asistente" onClick="{{ closeChat }}" style="width:40px;height:40px;border-radius:50%;border:0;background:transparent;color:var(--text-primary);display:grid;place-items:center;cursor:pointer" style-hover="background:var(--surface-sand)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+  </div>
+  <div ref="{{ chatListRef }}" style="flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:10px;font-size:14px;line-height:22px;letter-spacing:0;overscroll-behavior:contain">
+    <sc-for list="{{ chatMsgs }}" as="m" hint-placeholder-count="1">
+      <div style="align-self:{{ m.align }};max-width:84%;display:flex;flex-direction:column;gap:6px;padding:{{ m.pad }};border-radius:{{ m.radius }};background:{{ m.bg }};color:{{ m.color }}">
+        <sc-if value="{{ m.img }}" hint-placeholder-val="{{ false }}"><img src="{{ m.img }}" alt="Foto enviada" style="width:180px;max-width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;display:block"></sc-if>
+        <sc-if value="{{ m.text }}" hint-placeholder-val="{{ true }}"><span style="padding:0 4px">{{ m.text }}</span></sc-if>
+        <sc-for list="{{ m.cards }}" as="c" hint-placeholder-count="0">
+          <a href="{{ c.href }}" onClick="{{ closeChat }}" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:#fff;border:1px solid var(--border-subtle);color:var(--text-primary);font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;transition:border-color .15s" style-hover="border-color:var(--brand-500);color:var(--text-primary)"><span style="flex:1">{{ c.t }}</span><span style="color:var(--brand-700);display:flex"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span></a>
+        </sc-for>
+      </div>
+    </sc-for>
+    <sc-if value="{{ chatTyping }}" hint-placeholder-val="{{ false }}"><div aria-label="Escribiendo" style="align-self:flex-start;padding:12px 14px;border-radius:16px 16px 16px 6px;background:var(--surface-warm);display:flex;gap:4px">{{ typingDots }}</div></sc-if>
+    <sc-if value="{{ chatShowChips }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px">
+      <sc-for list="{{ chatChips }}" as="q" hint-placeholder-count="4"><button type="button" data-q="{{ q }}" onClick="{{ sendChip }}" style="padding:8px 12px;border-radius:999px;border:1px solid var(--brand-300);background:var(--brand-50);font:inherit;font-size:14px;line-height:22px;letter-spacing:0;font-weight:400;color:var(--brand-800);cursor:pointer" style-hover="background:var(--brand-100)">{{ q }}</button></sc-for>
+    </div></sc-if>
+  </div>
+  <form onSubmit="{{ sendChat }}" style="display:flex;align-items:center;gap:6px;margin:0 14px 14px;height:44px;padding:0 6px 0 6px;border-radius:999px;border:1px solid var(--border-default);background:#fff">
+    <label aria-label="Subir una foto" style="width:40px;height:40px;flex:none;border-radius:50%;display:grid;place-items:center;color:var(--brand-700);cursor:pointer" style-hover="background:var(--brand-50)"><input type="file" accept="image/*" onChange="{{ chatPhoto }}" style="display:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h1.8l1.4-2h4.6l1.4 2h1.8A2.5 2.5 0 0 1 20 8.5v8a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 16.5z"></path><path d="M9 12.5a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path></svg></label>
+    <input ref="{{ chatInputRef }}" value="{{ chatDraft }}" onChange="{{ chatInput }}" placeholder="Escribe tu mensaje" aria-label="Mensaje" style="flex:1;min-width:0;height:100%;border:0;outline:none;background:transparent;font:inherit;font-size:16px;line-height:24px;letter-spacing:-.01em;color:var(--text-primary)">
+    <button type="submit" aria-label="Enviar" style="width:40px;height:40px;flex:none;border-radius:50%;border:0;background:var(--brand-700);color:#fff;display:grid;place-items:center;cursor:pointer" style-hover="background:var(--brand-800)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"></path></svg></button>
+  </form>
+</div>
+<!-- 13 Botón flotante -->
+<a href="#" aria-label="Habla con el asistente" aria-expanded="{{ chatOpen }}" onClick="{{ toggleChat }}" onMouseEnter="{{ fabOpen }}" onMouseLeave="{{ fabClose }}" onFocus="{{ fabOpen }}" onBlur="{{ fabClose }}" style="position:fixed;right:clamp(16px,2.4vw,32px);bottom:clamp(16px,2.4vw,32px);z-index:60;height:clamp(56px,5vw,64px);min-width:clamp(56px,5vw,64px);border-radius:999px;background:var(--brand-700);color:#fff;display:flex;align-items:center;box-shadow:var(--shadow-lg);overflow:hidden;padding:0 clamp(15px,1.4vw,19px);box-sizing:border-box" style-hover="background:var(--brand-800);color:#fff">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="{{ fabIconA }}"></path><path d="{{ fabIconB }}"></path></svg>
+  <span style="max-width:{{ fabW }};opacity:{{ fabO }};margin-left:{{ fabG }};transition-property:max-width,opacity,margin;white-space:nowrap;overflow:hidden;font-size:16px;line-height:24px;letter-spacing:-.01em;font-weight:400;transition:max-width .3s var(--ease-out),opacity .2s">Habla con el asistente</span>
+</a>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;mes&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Enero&quot;,&quot;Febrero&quot;,&quot;Marzo&quot;,&quot;Abril&quot;,&quot;Mayo&quot;,&quot;Junio&quot;,&quot;Julio&quot;,&quot;Agosto&quot;,&quot;Septiembre&quot;,&quot;Octubre&quot;,&quot;Noviembre&quot;,&quot;Diciembre&quot;],&quot;default&quot;:&quot;Noviembre&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contenido estacional&quot;},&quot;temporada&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Automática&quot;,&quot;Primavera&quot;,&quot;Verano&quot;,&quot;Otoño&quot;,&quot;Invierno&quot;],&quot;default&quot;:&quot;Automática&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contenido estacional&quot;},&quot;brand&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;jardin&quot;,&quot;control&quot;],&quot;default&quot;:&quot;jardin&quot;,&quot;tsType&quot;:&quot;'jardin'|'control'&quot;,&quot;section&quot;:&quot;Sistema&quot;},&quot;handmade&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Detalles&quot;},&quot;fabExpanded&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Detalles&quot;}}">
+class Component extends DCLogic {
+  state = { fab: false, w: typeof window !== 'undefined' ? window.innerWidth : 1440, menu: false, loading: true, chat: false, chatDraft: '', chatTyping: false, chatMsgs: [{ r: 'a', text: 'Hola, soy el asistente de Anasac Jardín. Cuéntame qué le pasa a tu planta o sube una foto y te ayudo a identificar el problema.' }], mega: null, search: false, searchQ: '', hdrHidden: false, heroPlay: !(typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) };
+  seasonVals() {
+    const M = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    const mes = M.includes(this.props.mes) ? this.props.mes : 'Noviembre';
+    const T = ['Verano','Verano','Otoño','Otoño','Otoño','Invierno','Invierno','Invierno','Primavera','Primavera','Primavera','Verano'];
+    const tp = ['Primavera','Verano','Otoño','Invierno'].includes(this.props.temporada) ? this.props.temporada : T[M.indexOf(mes)];
+    const tl = tp.toLowerCase();
+    return { mes, mesLower: mes.toLowerCase(), temporada: tp, temporadaLower: tl, enPlena: (tl === 'primavera' ? 'plena ' : 'pleno ') + tl };
+  }
+  searchRef = React.createRef();
+  onHdr = () => {
+    const y = window.scrollY || document.documentElement.scrollTop || 0;
+    const last = this._lastY || 0;
+    let hide = this.state.hdrHidden;
+    if (y < 140) hide = false;
+    else if (y > last + 6) hide = !(this.state.mega || this.state.search);
+    else if (y < last - 6) hide = false;
+    if (Math.abs(y - last) > 6 || y < 140) this._lastY = y;
+    if (hide !== this.state.hdrHidden) this.setState(hide ? { hdrHidden: true, mega: null } : { hdrHidden: false });
+  };
+  setupReveal = () => {
+    if (this._revealed) return;
+    const root = this.rootRef.current;
+    if (!root || typeof IntersectionObserver === 'undefined') return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    this._revealed = true;
+    const targets = [];
+    root.querySelectorAll('section, footer').forEach(sec => {
+      if (sec.id === 'estacional') return;
+      const inners = Array.from(sec.children).filter(el => el.tagName === 'DIV' && !el.hasAttribute('aria-hidden') && getComputedStyle(el).position !== 'absolute');
+      inners.forEach(inner => {
+        let i = 0;
+        Array.from(inner.children).forEach(ch => {
+          const cs = getComputedStyle(ch);
+          if (cs.position === 'absolute' || cs.display === 'none') return;
+          if (cs.display === 'grid' && ch.children.length >= 3) Array.from(ch.children).forEach((g, k) => targets.push([g, k]));
+          else targets.push([ch, i++]);
+        });
+      });
+    });
+    const ease = 'cubic-bezier(.2,.7,.2,1)';
+    const show = (el) => {
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+      el.style.filter = 'blur(0)';
+      clearTimeout(el._rv);
+      el._rv = setTimeout(() => { el.style.opacity = ''; el.style.transform = ''; el.style.filter = ''; el.style.transition = ''; }, 1500);
+    };
+    this._io = new IntersectionObserver(entries => {
+      entries.forEach(en => { if (en.isIntersecting) { show(en.target); this._io.unobserve(en.target); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    targets.forEach(([el, k]) => {
+      const d = (Math.min(k, 7) * 0.07).toFixed(2);
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(28px)';
+      el.style.filter = 'blur(10px)';
+      el.style.transition = 'opacity .7s ' + ease + ' ' + d + 's, transform .8s ' + ease + ' ' + d + 's, filter .8s ' + ease + ' ' + d + 's';
+      this._io.observe(el);
+    });
+  };
+  smoothInit = () => {
+    if (window.matchMedia && (window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.matchMedia('(pointer: coarse)').matches)) return;
+    this._sAnim = false;
+    this.onWheel = (e) => {
+      if (e.ctrlKey || e.defaultPrevented || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      for (let el = e.target; el && el.nodeType === 1 && el !== document.body; el = el.parentElement) {
+        const oy = getComputedStyle(el).overflowY;
+        if ((oy === 'auto' || oy === 'scroll') && el.scrollHeight > el.clientHeight + 1) return;
+      }
+      e.preventDefault();
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const d = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * window.innerHeight : e.deltaY;
+      if (!this._sAnim) this._sTarget = this._sCur = window.scrollY;
+      this._sTarget = Math.max(0, Math.min(max, this._sTarget + d));
+      if (!this._sAnim) { this._sAnim = true; this._sRaf = requestAnimationFrame(this.smoothTick); }
+    };
+    window.addEventListener('wheel', this.onWheel, { passive: false });
+  };
+  smoothTick = () => {
+    const diff = this._sTarget - this._sCur;
+    this._sCur += diff * 0.1;
+    if (Math.abs(diff) < 0.5) { this._sCur = this._sTarget; this._sAnim = false; }
+    window.scrollTo({ top: this._sCur, behavior: 'instant' });
+    if (this._sAnim) this._sRaf = requestAnimationFrame(this.smoothTick);
+  };
+  setupChatIntro = () => {
+    const root = this.rootRef.current;
+    const sec = root && root.querySelector('#asistente');
+    if (!sec || typeof IntersectionObserver === 'undefined') return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const steps = Array.from(sec.querySelectorAll('[data-chat-step]'));
+    const typing = sec.querySelector('[data-chat-typing]');
+    if (!steps.length) return;
+    const hide = el => { el.style.opacity = '0'; el.style.transform = 'translateY(10px) scale(.97)'; el.style.transition = 'opacity .45s cubic-bezier(.2,.7,.2,1), transform .5s cubic-bezier(.2,.7,.2,1)'; };
+    const show = el => { el.style.opacity = '1'; el.style.transform = 'none'; };
+    steps.forEach(hide);
+    const host = steps[0].parentElement;
+    this._chatIO = new IntersectionObserver(es => {
+      if (!es.some(e => e.isIntersecting)) return;
+      this._chatIO.disconnect();
+      const plan = [[400, () => show(steps[0])], [1300, () => show(steps[1])], [2000, () => { if (typing && steps[2]) { host.style.position = 'relative'; typing.style.position = 'absolute'; typing.style.top = steps[2].offsetTop + 'px'; typing.style.left = steps[2].offsetLeft + 'px'; typing.style.display = 'flex'; } }], [3300, () => { if (typing) typing.style.display = 'none'; show(steps[2]); }], [3750, () => steps[3] && show(steps[3])], [4050, () => steps[4] && show(steps[4])]];
+      this._chatT2 = plan.map(([ms, f]) => setTimeout(f, ms));
+    }, { threshold: 0.45 });
+    this._chatIO.observe(host);
+  };
+  chatListRef = React.createRef();
+  chatInputRef = React.createRef();
+  chatReply(q, photo) {
+    const t = (q || '').toLowerCase();
+    let m;
+    if (photo || /mancha|polvo|blanc|hongo/.test(t)) m = { text: 'Por la foto, parece oídio, un hongo común en primavera. Así lo puedes tratar:', cards: [{ t: 'Cómo tratar el oídio · 4 min', href: '#guias' }, { t: 'Ver fungicidas recomendados', href: '#' }] };
+    else if (/amarill/.test(t)) m = { text: 'Las hojas amarillas suelen deberse a exceso de riego o falta de nitrógeno. ¿El suelo se mantiene húmedo varios días?', cards: [{ t: 'Guía: hojas amarillas · 3 min', href: '#problemas' }] };
+    else if (/plaga|pulg|bicho|insect|caracol/.test(t)) m = { text: 'Revisa el envés de las hojas: si ves pequeños insectos verdes o negros, probablemente son pulgones.', cards: [{ t: 'Cómo controlar pulgones', href: '#problemas' }, { t: 'Ver insecticidas recomendados', href: '#' }] };
+    else if (/plant|siembr|mes/.test(t) || t.indexOf(this.seasonVals().mesLower) >= 0) { const sv = this.seasonVals(); const crops = { primavera: 'tomate, albahaca, zapallo italiano y lechuga', verano: 'lechuga, acelga, poroto verde y rabanitos', 'otoño': 'habas, arvejas, ajo y espinaca', invierno: 'ajo, cebolla, habas y lechuga de invierno' }[sv.temporadaLower]; m = { text: 'En ' + sv.mesLower + ' puedes sembrar ' + crops + '. Riega temprano en la mañana.', cards: [{ t: 'Qué plantar en ' + sv.mesLower, href: '#estacional' }, { t: 'Calendario del jardín', href: '#estacional' }] }; }
+    else m = { text: 'Gracias por contarme. Para orientarte mejor, ¿me envías una foto de la planta?' };
+    this.setState({ chatTyping: true });
+    clearTimeout(this._chatT);
+    this._chatT = setTimeout(() => this.setState(s => ({ chatTyping: false, chatMsgs: s.chatMsgs.concat([Object.assign({ r: 'a' }, m)]) })), 1100);
+  }
+  chatSend(text) {
+    const v = (text || '').trim();
+    if (!v) return;
+    this.setState(s => ({ chatDraft: '', chatMsgs: s.chatMsgs.concat([{ r: 'u', text: v }]) }));
+    this.chatReply(v);
+  }
+  onKey = (e) => { if (e.key === 'Escape' && (this.state.search || this.state.mega || this.state.chat)) this.setState({ search: false, mega: null, chat: false }); };
+  trackRef = React.createRef();
+  heroTrackRef = React.createRef();
+  heroFx = () => {
+    this._hraf = 0;
+    const el = this.heroTrackRef.current, root = this.rootRef.current;
+    if (!el || !root) return;
+    if (!this._pano || !this._pano.isConnected) { this._pano = root.querySelector('[data-hero-pano]'); this._panoB = Array.from(root.querySelectorAll('[data-hero-pano-blur]')); }
+    const pano = this._pano;
+    if (!pano) return;
+    const br = pano.parentElement.getBoundingClientRect(), er = el.getBoundingClientRect();
+    const ok = pano.naturalWidth > 0;
+    const pw = ok ? Math.max(br.width, pano.naturalWidth * br.height / pano.naturalHeight) : br.width;
+    const max = el.scrollWidth - el.clientWidth;
+    const p = max > 0 ? Math.min(1, Math.max(0, el.scrollLeft / max)) : 0;
+    const tx = -(pw - br.width) * p;
+    const cx = er.left + er.width / 2;
+    const items = Array.from(el.children).map(c => { const hole = c.querySelector('[data-hole]'); return { c, hi: hole && hole.firstElementChild, b: c.getBoundingClientRect(), hr: hole && hole.getBoundingClientRect() }; });
+    const t = 'translate3d(' + tx.toFixed(1) + 'px,0,0)';
+    pano.style.transform = t;
+    this._panoB.forEach(i => { i.style.transform = t; });
+    items.forEach(({ c, hi, b, hr }) => {
+      const d = Math.min(1, Math.abs(b.left + b.width / 2 - cx) / (b.width + 40));
+      const s = 1 - d * 0.06;
+      if (hi && hr) {
+        if (!ok || d < 0.02) hi.style.opacity = '0';
+        else {
+          hi.style.width = (pw / s).toFixed(1) + 'px';
+          hi.style.height = (br.height / s).toFixed(1) + 'px';
+          hi.style.transform = 'translate3d(' + ((br.left + tx - hr.left) / s).toFixed(1) + 'px,' + ((br.top - hr.top) / s).toFixed(1) + 'px,0)';
+          hi.style.opacity = Math.min(1, d * 1.6).toFixed(3);
+        }
+      }
+      const bl = d > 0.02 ? Math.round(d * 12) / 4 : 0;
+      if (c._bl !== bl) { c._bl = bl; c.style.filter = bl ? 'blur(' + bl + 'px)' : ''; }
+      c.style.scale = s.toFixed(4);
+    });
+  };
+  heroOnScroll = () => { if (!this._hraf) this._hraf = requestAnimationFrame(this.heroFx); };
+  heroScroll(dir) {
+    const el = this.heroTrackRef.current;
+    if (!el) return;
+    const card = el.firstElementChild;
+    const step = card ? card.getBoundingClientRect().width + 40 : 300;
+    const max = el.scrollWidth - el.clientWidth;
+    if (dir > 0 && el.scrollLeft >= max - 4) el.scrollTo({ left: 0, behavior: 'smooth' });
+    else if (dir < 0 && el.scrollLeft <= 4) el.scrollTo({ left: max, behavior: 'smooth' });
+    else el.scrollBy({ left: dir * step, behavior: 'smooth' });
+  }
+  rootRef = React.createRef();
+  measure = () => {
+    const el = this.rootRef.current;
+    const w = Math.round(el ? el.getBoundingClientRect().width : window.innerWidth);
+    if (w && w !== this.state.w) this.setState({ w, menu: w >= 1180 ? false : this.state.menu });
+  };
+  attach = () => {
+    const el = this.rootRef.current;
+    if (el && !this.ro && typeof ResizeObserver !== 'undefined') {
+      this.ro = new ResizeObserver(this.measure);
+      this.ro.observe(el);
+    }
+    if (!this.ro && this._tries++ < 60) this._raf = requestAnimationFrame(this.attach);
+    this.measure();
+  };
+  estRef = React.createRef();
+  stack = () => {
+    this._sraf = 0;
+    const sec = this.estRef.current;
+    if (!sec) return;
+    const cards = sec.querySelectorAll('[data-est-card]');
+    const on = this.state.w >= 900;
+    const vh = window.innerHeight;
+    const r = sec.getBoundingClientRect();
+    const prog = on ? Math.min(1, Math.max(0, -r.top / Math.max(1, r.height - vh))) : 0;
+    const ease = t => 1 - Math.pow(1 - t, 3);
+    const seg = 0.44;
+    const t = [1, ease(Math.min(1, Math.max(0, prog / seg))), ease(Math.min(1, Math.max(0, (prog - seg) / seg)))];
+    cards.forEach((c, i) => {
+      if (!on) { c.style.transform = ''; c.style.filter = ''; return; }
+      const depth = t.slice(i + 1).reduce((a, b) => a + b, 0);
+      const y = (1 - t[i]) * vh;
+      const rot = [-1.6, 1.2, -0.5][i] || 0;
+      c.style.transform = 'translateY(' + y.toFixed(1) + 'px) rotate(' + rot + 'deg) scale(' + (1 - depth * 0.03).toFixed(4) + ')';
+      c.style.filter = depth > 0.01 ? 'blur(' + (depth * 0.8).toFixed(2) + 'px) brightness(' + (1 - depth * 0.08).toFixed(3) + ')' : '';
+    });
+  };
+  onScroll = () => { if (!this._sraf) this._sraf = requestAnimationFrame(this.stack); };
+  initMap() {
+    const box = document.querySelector('[data-map]'), layer = box && box.querySelector('[data-map-layer]');
+    if (!box || !layer || box._mapInit) return;
+    box._mapInit = true;
+    const pins = Array.from(layer.querySelectorAll('[data-pin]'));
+    const m = { s: 1, x: 0, y: 0, base: 0 };
+    const clamp = () => {
+      const w = box.clientWidth, h = box.clientHeight, size = m.base * m.s;
+      m.x = Math.min(0, Math.max(w - size, m.x)); m.y = Math.min(0, Math.max(h - size, m.y));
+    };
+    const apply = (anim) => {
+      clamp();
+      layer.style.transition = anim ? 'transform .3s cubic-bezier(.3,.7,.2,1)' : 'none';
+      layer.style.transform = 'translate(' + m.x + 'px,' + m.y + 'px) scale(' + m.s + ')';
+      pins.forEach(p => { p.style.transition = layer.style.transition; p.style.transform = 'translate(-50%,-50%) scale(' + (1 / m.s) + ')'; });
+    };
+    const zoomAt = (f, cx, cy, anim) => {
+      const ns = Math.min(5, Math.max(1, m.s * f)), k = ns / m.s;
+      m.x = cx - (cx - m.x) * k; m.y = cy - (cy - m.y) * k; m.s = ns; apply(anim);
+    };
+    const reset = (anim) => {
+      const w = box.clientWidth, h = box.clientHeight;
+      m.base = Math.max(w, h); layer.style.width = layer.style.height = m.base + 'px';
+      m.s = 1.6; m.x = w / 2 - m.base * m.s * 0.55; m.y = h / 2 - m.base * m.s * 0.5; apply(anim);
+    };
+    reset(false);
+    this._mapRO = new ResizeObserver(() => { const old = m.base, nb = Math.max(box.clientWidth, box.clientHeight); if (!nb) return; if (!old) { reset(false); return; } m.base = nb; layer.style.width = layer.style.height = nb + 'px'; m.x *= nb / old; m.y *= nb / old; apply(false); });
+    this._mapRO.observe(box);
+    box.addEventListener('click', e => {
+      const b = e.target.closest('[data-map-zoom]');
+      if (b) { const z = b.dataset.mapZoom; if (z === 'reset') reset(true); else zoomAt(z === 'in' ? 1.5 : 1 / 1.5, box.clientWidth / 2, box.clientHeight / 2, true); return; }
+      if (m.moved) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
+    box.addEventListener('wheel', e => { e.preventDefault(); const r = box.getBoundingClientRect(); zoomAt(e.deltaY < 0 ? 1.15 : 1 / 1.15, e.clientX - r.left, e.clientY - r.top, false); }, { passive: false });
+    const pts = new Map(); let last = null, lastDist = 0;
+    box.addEventListener('pointerdown', e => {
+      if (e.target.closest('[data-map-zoom]')) return;
+      pts.set(e.pointerId, { x: e.clientX, y: e.clientY }); m.moved = false; last = { x: e.clientX, y: e.clientY }; box.style.cursor = 'grabbing';
+      if (pts.size === 2) { const [a, b] = [...pts.values()]; lastDist = Math.hypot(a.x - b.x, a.y - b.y); }
+    });
+    window.addEventListener('pointermove', e => {
+      if (!pts.has(e.pointerId)) return;
+      pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pts.size === 2) {
+        const [a, b] = [...pts.values()], d = Math.hypot(a.x - b.x, a.y - b.y), r = box.getBoundingClientRect();
+        if (lastDist) zoomAt(d / lastDist, (a.x + b.x) / 2 - r.left, (a.y + b.y) / 2 - r.top, false);
+        lastDist = d; m.moved = true; return;
+      }
+      const dx = e.clientX - last.x, dy = e.clientY - last.y;
+      if (Math.abs(dx) + Math.abs(dy) > 3) m.moved = true;
+      last = { x: e.clientX, y: e.clientY }; m.x += dx; m.y += dy; apply(false);
+    });
+    const up = e => { pts.delete(e.pointerId); lastDist = 0; if (!pts.size) box.style.cursor = 'grab'; else last = [...pts.values()][0]; setTimeout(() => { if (!pts.size) m.moved = false; }, 0); };
+    window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up);
+  }
+  componentDidMount() {
+    setTimeout(() => this.initMap(), 0);
+    this._tries = 0;
+    window.addEventListener('scroll', this.onScroll, true);
+    window.addEventListener('keydown', this.onKey);
+    const t0 = Date.now();
+    const done = () => {
+      const wait = Math.max(0, 700 - (Date.now() - t0));
+      this._ldT = setTimeout(() => { this.setState({ loading: 'fade' }); this._ldT2 = setTimeout(() => this.setState({ loading: false }), 650); }, wait);
+    };
+    if (document.readyState === 'complete') done(); else { this._onLoad = done; window.addEventListener('load', done, { once: true }); this._ldMax = setTimeout(done, 2500); }
+    this._rvT = setTimeout(this.setupReveal, 60);
+    this._ciT = setTimeout(this.setupChatIntro, 80);
+    this.smoothInit();
+    this._hauto = setInterval(() => { if (this.state.heroPlay && !this._hHover && !this._hFocus && !document.hidden) this.heroScroll(1); }, 3500);
+    { const p = this.rootRef.current && this.rootRef.current.querySelector('[data-hero-pano]'); if (p) { if (p.complete) this.heroOnScroll(); else p.addEventListener('load', this.heroOnScroll, { once: true }); } }
+    window.addEventListener('resize', this.measure);
+    this.attach();
+  }
+  componentDidUpdate(pp, ps) {
+    if (ps && (ps.chatMsgs !== this.state.chatMsgs || ps.chatTyping !== this.state.chatTyping) && this.chatListRef.current) { const el = this.chatListRef.current; requestAnimationFrame(() => { el.scrollTop = el.scrollHeight; }); } if (!this.ro) this.attach(); this.onScroll(); this.heroOnScroll(); }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.measure);
+    window.removeEventListener('scroll', this.onScroll, true);
+    window.removeEventListener('keydown', this.onKey);
+    clearTimeout(this._rvT); clearTimeout(this._ciT); (this._chatT2 || []).forEach(clearTimeout); if (this._chatIO) this._chatIO.disconnect(); clearTimeout(this._ldT); clearTimeout(this._ldT2); clearTimeout(this._ldMax);
+    if (this._onLoad) window.removeEventListener('load', this._onLoad);
+    if (this.onWheel) window.removeEventListener('wheel', this.onWheel);
+    cancelAnimationFrame(this._sRaf);
+    if (this._io) this._io.disconnect();
+    clearInterval(this._hiv);
+    clearInterval(this._hauto);
+    cancelAnimationFrame(this._raf);
+    cancelAnimationFrame(this._sraf);
+    this.ro && this.ro.disconnect();
+  }
+  scroll(dir) {
+    const el = this.trackRef.current;
+    if (!el) return;
+    const card = el.firstElementChild;
+    const step = card ? card.getBoundingClientRect().width + 24 : 404;
+    el.scrollBy({ left: dir * step, behavior: 'smooth' });
+  }
+  renderVals() {
+    const fab = this.state.fab || this.props.fabExpanded === true;
+    const w = this.state.w;
+    const lg = w >= 1180, sm = w < 720, md = !lg && !sm;
+    const menu = this.state.menu && !lg;
+    return {
+      ...this.seasonVals(),
+      rootRef: this.rootRef,
+      showNav: lg, showBurger: !lg, showProBtn: !sm,
+      megaJardin: lg && this.state.mega === 'jardin', megaProductos: lg && this.state.mega === 'productos',
+      jardinBg: this.state.mega === 'jardin' ? 'var(--surface-warm)' : 'transparent', productosBg: this.state.mega === 'productos' ? 'var(--surface-warm)' : 'transparent',
+      jardinRot: this.state.mega === 'jardin' ? 'rotate(180deg)' : 'none', productosRot: this.state.mega === 'productos' ? 'rotate(180deg)' : 'none',
+      openJardin: () => this.setState({ mega: 'jardin', search: false }), openProductos: () => this.setState({ mega: 'productos', search: false }),
+      toggleJardin: () => this.setState(s => ({ mega: s.mega === 'jardin' ? null : 'jardin' })), toggleProductos: () => this.setState(s => ({ mega: s.mega === 'productos' ? null : 'productos' })),
+      closeMega: () => { if (this.state.mega) this.setState({ mega: null }); },
+      headerY: this.state.hdrHidden ? 'translateY(-100%)' : 'none',
+      searchOpen: this.state.search, searchRef: this.searchRef, searchQ: this.state.searchQ,
+      toggleSearch: () => this.setState(s => ({ search: !s.search, mega: null, menu: false }), () => { if (this.state.search && this.searchRef.current) this.searchRef.current.focus(); }),
+      closeSearch: () => this.setState({ search: false }),
+      onSearchInput: (e) => this.setState({ searchQ: e.target.value }),
+      pickSearch: (e) => { const q = e.currentTarget.getAttribute('data-q'); this.setState({ searchQ: q }, () => this.searchRef.current && this.searchRef.current.focus()); },
+      loaderOn: this.state.loading !== false, loaderOpacity: this.state.loading === 'fade' ? 0 : 1,
+      loaderBar: this._ldBar || (this._ldBar = React.createElement('div', { style: { width: '40%', height: '100%', borderRadius: 999, background: '#3E6B26', animation: 'ldbar 1.1s cubic-bezier(.4,0,.2,1) infinite' } })),
+      menuOpen: menu, toggleMenu: () => this.setState(s => ({ menu: !s.menu })),
+      burgerBg: menu ? 'var(--surface-sand)' : 'transparent',
+      burgerPath: menu ? 'M6 6l12 12M18 6L6 18' : 'M4 7h16M4 12h16M4 17h10',
+      menuCols: sm ? 'minmax(0,1fr)' : 'minmax(0,3fr) minmax(0,2fr)',
+      utilJustify: sm ? 'center' : 'flex-end',
+      heroCols: lg ? 'minmax(0,5fr) minmax(0,7fr)' : 'minmax(0,1fr)',
+      heroH: lg ? '100%' : (sm ? '540px' : '600px'), heroRadius: lg ? 'clamp(160px,20vw,280px) clamp(28px,3vw,40px) clamp(28px,3vw,40px) clamp(28px,3vw,40px)' : '0px', heroSecH: lg ? 'calc(100svh - 32px - clamp(56px,5vw,68px))' : 'auto', heroSecMin: lg ? '600px' : '0px',
+      stickerLeft: lg ? '-36px' : '-8px',
+      asstCols: lg ? 'minmax(0,1fr) 440px' : 'minmax(0,1fr)',
+      showChat: !sm, showArrow: false,
+      hubN: lg ? 4 : 2, hubArrow: sm ? '36px' : '44px', hubArrowDisp: sm ? 'none' : 'grid',
+      estSecH: w >= 900 ? '280vh' : 'auto', estStagePos: w >= 900 ? 'sticky' : 'relative', estStageH: w >= 900 ? (this.state.hdrHidden ? '100svh' : 'calc(100svh - clamp(56px,5vw,68px))') : 'auto', estStageTop: w >= 900 && !this.state.hdrHidden ? 'clamp(56px,5vw,68px)' : '0px', estPad: w >= 900 ? '16px clamp(20px,4vw,40px) 16px' : 'clamp(56px,9vw,104px) clamp(20px,4vw,40px)', estCols: w >= 900 ? 'minmax(0,5fr) minmax(0,7fr)' : 'minmax(0,1fr)', estCardCols: w >= 1100 ? 'minmax(0,1fr) minmax(0,1fr)' : 'minmax(0,1fr)', estStackDisplay: w >= 900 ? 'grid' : 'flex', estArea: w >= 900 ? '1 / 1' : 'auto', estMt1: '0px', estMt2: w >= 900 ? 'clamp(28px,6vh,56px)' : '0px', estMt3: w >= 900 ? 'clamp(56px,12vh,112px)' : '0px', estRef: this.estRef, symN: lg ? 4 : 2, guideN: lg ? 4 : 2, retailN: lg ? 6 : (sm ? 2 : 3),
+      proCols: 'minmax(0,1fr)',
+      footCols: lg ? 'minmax(0,4fr) minmax(0,2fr) minmax(0,2fr) minmax(0,4fr)' : (sm ? 'minmax(0,1fr)' : 'minmax(0,1fr) minmax(0,1fr)'),
+      brand: this.props.brand ?? 'jardin',
+      showHand: this.props.handmade ?? true,
+      showSticker: false,
+      trackRef: this.trackRef,
+      heroTrackRef: this.heroTrackRef,
+      heroOnScroll: this.heroOnScroll,
+      heroHoverOn: () => { this._hHover = true; },
+      heroHoverOff: () => { this._hHover = false; },
+      heroFocusIn: (e) => {
+        this._hFocus = true;
+        const tr = this.heroTrackRef.current;
+        if (!tr || !tr.contains(e.target)) return;
+        let c = e.target; while (c && c.parentElement !== tr) c = c.parentElement;
+        if (c) tr.scrollTo({ left: c.offsetLeft - (tr.clientWidth - c.offsetWidth) / 2, behavior: 'smooth' });
+      },
+      heroFocusOut: (e) => { if (!e.currentTarget.contains(e.relatedTarget)) this._hFocus = false; },
+      heroTogglePlay: () => this.setState(s => ({ heroPlay: !s.heroPlay })),
+      heroPlayLabel: this.state.heroPlay ? 'Pausar carrusel' : 'Reproducir carrusel',
+      heroPlayIcon: this.state.heroPlay ? 'M9 6v12M15 6v12' : 'M8 5.5v13l10.5-6.5z',
+      heroLive: this.state.heroPlay ? 'off' : 'polite',
+      heroPrev: () => this.heroScroll(-1),
+      heroNext: () => this.heroScroll(1),
+      heroCardW: sm ? 'min(265px,70vw)' : 'clamp(265px,22.5vw,310px)', heroCardHalf: sm ? 'min(132.5px,35vw)' : 'clamp(132.5px,11.25vw,155px)',
+      prev: () => this.scroll(-1),
+      next: () => this.scroll(1),
+      fabOpen: () => this.setState({ fab: true }),
+      fabClose: () => this.setState({ fab: false }),
+      fabW: fab && !this.state.chat ? '240px' : '0px',
+      fabO: fab && !this.state.chat ? 1 : 0,
+      fabG: fab && !this.state.chat ? '12px' : '0px',
+      fabIconA: this.state.chat ? 'M6 6l12 12' : 'M4 18.5V7a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H8.5z',
+      fabIconB: this.state.chat ? 'M18 6L6 18' : 'M8.5 9.5h7M8.5 12.5h4',
+      chatOpen: this.state.chat,
+      chatO: this.state.chat ? 1 : 0, chatT: this.state.chat ? 'none' : 'translateY(12px) scale(.96)', chatPE: this.state.chat ? 'auto' : 'none', chatVis: this.state.chat ? 'visible' : 'hidden',
+      openChat: (e) => { if (e) e.preventDefault(); this.setState({ chat: true, search: false, mega: null }, () => this.chatInputRef.current && this.chatInputRef.current.focus()); },
+      toggleChat: (e) => { if (e) e.preventDefault(); this.setState(s => ({ chat: !s.chat, fab: false }), () => this.state.chat && this.chatInputRef.current && this.chatInputRef.current.focus()); },
+      closeChat: () => this.setState({ chat: false }),
+      chatListRef: this.chatListRef, chatInputRef: this.chatInputRef,
+      chatMsgs: this.state.chatMsgs.map(m => m.r === 'u'
+        ? { text: m.text || '', img: m.img || '', cards: [], align: 'flex-end', bg: 'var(--brand-700)', color: '#fff', radius: '16px 16px 6px 16px', pad: m.img ? '5px 5px 9px' : '9px 10px' }
+        : { text: m.text || '', img: '', cards: m.cards || [], align: 'flex-start', bg: 'var(--surface-warm)', color: 'var(--text-primary)', radius: '16px 16px 16px 6px', pad: '9px 10px' }),
+      chatTyping: this.state.chatTyping,
+      typingDots: this._dots || (this._dots = [0, 1, 2].map(i => React.createElement('span', { key: i, style: { width: 6, height: 6, borderRadius: '50%', background: 'var(--brand-700)', animation: 'chatdot 1.1s ease-in-out ' + (i * 0.15) + 's infinite' } }))),
+      chatShowChips: this.state.chatMsgs.length === 1 && !this.state.chatTyping,
+      chatChips: ['Hojas amarillas', 'Tiene manchas blancas', 'Plagas en mis plantas', 'Qué plantar este mes'],
+      sendChip: (e) => this.chatSend(e.currentTarget.getAttribute('data-q')),
+      chatDraft: this.state.chatDraft,
+      chatInput: (e) => this.setState({ chatDraft: e.target.value }),
+      sendChat: (e) => { e.preventDefault(); this.chatSend(this.state.chatDraft); },
+      chatPhoto: (e) => { const f = e.target.files && e.target.files[0]; if (!f) return; const url = URL.createObjectURL(f); e.target.value = ''; this.setState(s => ({ chatMsgs: s.chatMsgs.concat([{ r: 'u', img: url, text: 'Mira cómo está mi planta' }]) })); this.chatReply('', true); },
+      noSubmit: (e) => e.preventDefault(),
+    };
+  }
+}
+</script>
+</body>
+</html>

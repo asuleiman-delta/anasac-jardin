@@ -1,0 +1,54 @@
+/* Anasac base tokens — shared by Jardín, Control y Pets.
+   Primitives (raw scales) → semantic aliases (brand-*, surface-*, text-*).
+   A brand swaps its primary by remapping --brand-* only. */
+:root{
+  /* Primitives · Verde Anasac (500 = #78A351) */
+  --green-50:#F3F7EC;--green-100:#E5EED8;--green-200:#CCDDB4;--green-300:#AFCA8C;--green-400:#93B76C;
+  --green-500:#78A351;--green-600:#5F8A3C;--green-700:#4A6F2E;--green-800:#375424;--green-900:#243A18;--green-950:#16240F;
+  /* Primitives · Azul Anasac (500 = #265CB5) */
+  --blue-50:#EEF3FB;--blue-100:#DCE6F7;--blue-200:#B9CDEF;--blue-300:#8DAEE3;--blue-400:#5B87D0;
+  --blue-500:#265CB5;--blue-600:#1F4C98;--blue-700:#193D7B;--blue-800:#132E5D;--blue-900:#0D1F40;--blue-950:#08142A;
+  /* Primitives · Neutros cálidos */
+  --sand-0:#FFFFFF;--sand-50:#FBF9F4;--sand-100:#F6F1E7;--sand-200:#EDE5D5;--sand-300:#E0D5C0;--sand-400:#C9BBA2;
+  --sand-500:#A69A84;--sand-600:#81786A;--sand-700:#5B5448;--sand-800:#3D3830;--sand-900:#26231E;
+  /* Primitives · Acentos */
+  --earth-100:#F5E2D6;--earth-300:#E3A98A;--earth-500:#C26A43;--earth-700:#8F4527;
+  --sun-100:#F6EACB;--sun-300:#EBCB7E;--sun-500:#D9A53A;--sun-700:#7A5A12;
+
+  /* Semantic · Marca (Jardín por defecto) */
+  --brand-50:var(--green-50);--brand-100:var(--green-100);--brand-200:var(--green-200);--brand-300:var(--green-300);
+  --brand-400:var(--green-400);--brand-500:var(--green-500);--brand-600:var(--green-600);--brand-700:var(--green-700);
+  --brand-800:var(--green-800);--brand-900:var(--green-900);--brand-950:var(--green-950);
+  /* Semantic · Profesional / B2B (siempre azul) */
+  --pro-50:var(--blue-50);--pro-100:var(--blue-100);--pro-200:var(--blue-200);--pro-300:var(--blue-300);--pro-500:var(--blue-500);
+  --pro-700:var(--blue-700);--pro-800:var(--blue-800);--pro-900:var(--blue-900);
+  /* Semantic · Superficies */
+  --surface-base:var(--sand-50);--surface-warm:var(--sand-100);--surface-sand:var(--sand-200);--surface-card:var(--sand-0);
+  --surface-brand-subtle:var(--brand-50);--surface-brand:var(--brand-100);--surface-inverse:var(--brand-950);
+  /* Semantic · Texto y bordes */
+  --text-primary:var(--sand-900);--text-secondary:var(--sand-700);--text-muted:var(--sand-600);--text-inverse:var(--sand-50);
+  --text-brand:var(--brand-700);--border-subtle:var(--sand-200);--border-default:var(--sand-300);--border-strong:var(--sand-900);
+  /* Semantic · Estados */
+  --success-100:#E3EFD9;--success-700:#3F6B2A;--warning-100:#F8EBCF;--warning-700:#7F5710;
+  --danger-100:#F7DEDA;--danger-700:#9C3226;--info-100:var(--blue-100);--info-700:var(--blue-700);
+
+  /* Tipografía */
+  --font-display:'DM Serif Display',Georgia,serif;--font-ui:'Figtree',system-ui,sans-serif;--font-hand:'Kalam',cursive;
+  /* Espaciado base 4/8 */
+  --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;--space-8:32px;
+  --space-10:40px;--space-12:48px;--space-16:64px;--space-20:80px;--space-24:96px;--space-32:128px;
+  /* Radios */
+  --radius-xs:6px;--radius-sm:10px;--radius-md:16px;--radius-lg:24px;--radius-xl:32px;--radius-2xl:48px;--radius-pill:999px;
+  /* Sombras (tinte cálido) */
+  --shadow-sm:0 1px 2px rgba(38,35,30,.06),0 1px 3px rgba(38,35,30,.05);
+  --shadow-md:0 10px 24px -8px rgba(38,35,30,.16),0 2px 6px rgba(38,35,30,.05);
+  --shadow-lg:0 28px 56px -16px rgba(38,35,30,.26),0 6px 14px rgba(38,35,30,.06);
+  /* Movimiento */
+  --ease-out:cubic-bezier(.2,.7,.2,1);--dur-fast:150ms;--dur-base:240ms;
+}
+/* Brand swaps: only the brand ramp changes */
+[data-brand="control"]{
+  --brand-50:var(--blue-50);--brand-100:var(--blue-100);--brand-200:var(--blue-200);--brand-300:var(--blue-300);
+  --brand-400:var(--blue-400);--brand-500:var(--blue-500);--brand-600:var(--blue-600);--brand-700:var(--blue-700);
+  --brand-800:var(--blue-800);--brand-900:var(--blue-900);--brand-950:var(--blue-950);
+}
